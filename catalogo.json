@@ -35,10 +35,10 @@
    "icono": "🤖",
    "carpeta": "~/accc-projects/paper-trading-bot",
    "puerto": 8484,
-   "descripcion": "laboratorio de trading con dinero ficticio (cuentas propias: se reparte a amigos)",
+   "descripcion": "laboratorio de trading con dinero ficticio; se reparte a amigos",
    "launchd": "com.ag.paper-panel",
-   "cuentas": "propias",
-   "version": "3.16.0"
+   "version": "3.16.0",
+   "nucleo": "propio"
   }
  ]
 }

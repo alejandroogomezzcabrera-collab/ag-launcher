@@ -127,7 +127,7 @@ def comprobar(_):
         t = c / "TERMINOS.md"
         if not t.exists() or "AG Creations" not in t.read_text(encoding="utf-8"):
             fallos.append("TERMINOS.md sin AG Creations")
-        if a.get("cuentas") != "propias" and "agcore" not in (c / "panel.py").read_text(encoding="utf-8", errors="ignore"):
+        if a.get("nucleo") != "propio" and "agcore" not in (c / "panel.py").read_text(encoding="utf-8", errors="ignore"):
             fallos.append("panel.py sin agcore")
         print(f"{'✓' if not fallos else '✗'} {a['icono']} {a['nombre']} v{a.get('version')}" + (" · " + ", ".join(fallos) if fallos else ""))
         ok = ok and not fallos

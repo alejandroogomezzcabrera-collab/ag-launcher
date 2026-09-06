@@ -8,7 +8,7 @@ sin servidores ni cuentas en internet, y todas comparten este núcleo.
 | 🎬 Shorts Factory | `~/shorts-factory-v2` | 8585 | fábrica autónoma de shorts para YouTube |
 | 🧠 LLM Lab | `~/llm-lab` | 8686 | un GPT desde cero, por dentro, con curso interactivo |
 | 🌌 Second Brain AI | `~/second-brain` | 8787 | la memoria de largo plazo de Claude, en 3D |
-| 🤖 Bot Lab | `~/accc-projects/paper-trading-bot` | 8484 | trading con dinero ficticio; se reparte a amigos (cuentas propias) |
+| 🤖 Bot Lab | `~/accc-projects/paper-trading-bot` | 8484 | trading con dinero ficticio; se reparte a amigos (lleva su propia copia de la lógica de cuentas: mismo formato y misma carpeta) |
 
 La lista viva está en `catalogo.json`; cada app lleva su versión en su fichero `VERSION`.
 
