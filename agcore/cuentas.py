@@ -93,6 +93,8 @@ def _importar_externas(cuentas: list[dict]) -> bool:
     """Las apps con cuentas propias (Bot Lab, que se reparte a amigos) guardan el mismo formato
     (scrypt + sal) en su carpeta: se copian aquí para que la cuenta sirva en todas las apps."""
     cambiado = False
+    if os.environ.get("AG_SIN_EXTERNAS"):          # tests
+        return False
     for a in catalogo():
         if a.get("cuentas") != "propias":
             continue

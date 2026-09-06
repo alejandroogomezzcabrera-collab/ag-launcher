@@ -16,6 +16,7 @@ sys.path.insert(0, str(RAIZ))
 @pytest.fixture
 def datos(tmp_path, monkeypatch):
     monkeypatch.setenv("AG_DATOS", str(tmp_path / "datos"))
+    monkeypatch.setenv("AG_SIN_EXTERNAS", "1")
     from agcore import cuentas
     cuentas._fallos.clear()
     return cuentas
@@ -64,6 +65,7 @@ def test_validaciones(datos):
 @pytest.fixture
 def servidor(tmp_path, monkeypatch):
     monkeypatch.setenv("AG_DATOS", str(tmp_path / "datos"))
+    monkeypatch.setenv("AG_SIN_EXTERNAS", "1")
     from agcore import cuentas
     from agcore.acceso import Guardia
     cuentas._fallos.clear()
