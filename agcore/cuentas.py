@@ -21,7 +21,9 @@ import time
 import unicodedata
 from datetime import datetime
 
-from . import carpeta_datos
+from pathlib import Path
+
+from . import carpeta_datos, catalogo
 
 SCRYPT = {"n": 2 ** 14, "r": 8, "p": 1, "dklen": 32}
 MIN_CONTRASENA = 8
@@ -87,13 +89,39 @@ def _publica(c: dict) -> dict:
 
 
 # ----------------------------------------------------------------- cuentas
+def _importar_externas(cuentas: list[dict]) -> bool:
+    """Las apps con cuentas propias (Bot Lab, que se reparte a amigos) guardan el mismo formato
+    (scrypt + sal) en su carpeta: se copian aquí para que la cuenta sirva en todas las apps."""
+    cambiado = False
+    for a in catalogo():
+        if a.get("cuentas") != "propias":
+            continue
+        try:
+            externas = json.loads((Path(a["carpeta"]).expanduser() / "cuentas.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for c in externas if isinstance(externas, list) else []:
+            if all(k in c for k in ("id", "nombre", "apellido", "sal", "hash")) and not any(x["id"] == c["id"] for x in cuentas):
+                cuentas.append({"id": c["id"], "nombre": c["nombre"], "apellido": c["apellido"], "sal": c["sal"], "hash": c["hash"],
+                                "scrypt": c.get("scrypt", SCRYPT), "creada": c.get("creada"), "terminos": {}, "ultima": {}, "origen": a["id"]})
+                cambiado = True
+    return cambiado
+
+
+def _todas() -> list[dict]:
+    cuentas = _leer("cuentas.json", [])
+    if _importar_externas(cuentas):
+        _escribir("cuentas.json", cuentas)
+    return cuentas
+
+
 def listar() -> list[dict]:
     """Las cuentas de este dispositivo, sin nada secreto (para «bienvenido de nuevo»)."""
-    return [_publica(c) for c in _leer("cuentas.json", [])]
+    return [_publica(c) for c in _todas()]
 
 
 def hay_cuentas() -> bool:
-    return bool(_leer("cuentas.json", []))
+    return bool(_todas())
 
 
 def _comprobar_contrasena_nueva(contrasena, nombre: str, apellido: str) -> None:
@@ -109,7 +137,7 @@ def crear(nombre: str, apellido: str, contrasena: str, app: str, terminos_versio
     if not acepta_terminos:
         raise ErrorCuenta("hay que leer y aceptar los términos")
     _comprobar_contrasena_nueva(contrasena, nombre, apellido)
-    cuentas = _leer("cuentas.json", [])
+    cuentas = _todas()
     cid = _id_de(nombre, apellido)
     if any(c["id"] == cid for c in cuentas):
         raise ErrorCuenta("ya existe una cuenta con ese nombre y apellido en este dispositivo: entra con ella")
@@ -123,7 +151,7 @@ def crear(nombre: str, apellido: str, contrasena: str, app: str, terminos_versio
 
 
 def _cuenta(cid: str) -> dict | None:
-    return next((c for c in _leer("cuentas.json", []) if c["id"] == cid), None)
+    return next((c for c in _todas() if c["id"] == cid), None)
 
 
 def comprobar(cid: str, contrasena: str) -> dict | None:
