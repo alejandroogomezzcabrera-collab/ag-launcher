@@ -1,0 +1,14 @@
+{
+ "empresa": "AG Creations",
+ "propietario": "Alejandro Gómez Cabrera",
+ "apps": [
+  {"id": "shorts-factory", "nombre": "Shorts Factory", "icono": "🎬", "carpeta": "~/shorts-factory-v2", "puerto": 8585,
+   "descripcion": "fábrica autónoma de shorts para YouTube", "launchd": "com.ag.shorts-panel"},
+  {"id": "llm-lab", "nombre": "LLM Lab", "icono": "🧠", "carpeta": "~/llm-lab", "puerto": 8686,
+   "descripcion": "un GPT desde cero, por dentro, con curso interactivo", "launchd": "com.ag.llm-panel"},
+  {"id": "second-brain", "nombre": "Second Brain AI", "icono": "🌌", "carpeta": "~/second-brain", "puerto": 8787,
+   "descripcion": "la memoria de largo plazo de Claude, en 3D", "launchd": "com.ag.brain-panel"},
+  {"id": "bot-lab", "nombre": "Bot Lab", "icono": "🤖", "carpeta": "~/accc-projects/paper-trading-bot", "puerto": 8484,
+   "descripcion": "laboratorio de trading con dinero ficticio (cuentas propias: se reparte a amigos)", "launchd": "com.ag.paper-panel", "cuentas": "propias"}
+ ]
+}

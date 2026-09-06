@@ -1,0 +1,76 @@
+/* acceso.css — pantalla de acceso y chip de cuenta de AG Creations (se inyecta en cada app) */
+#ag-acceso{position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;background:radial-gradient(1200px 700px at 30% 20%,#182033 0%,#0a0d14 60%,#06080d 100%);color:#eaf0f7;font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
+#ag-acceso *,#ag-modal *,#ag-menu *{box-sizing:border-box}
+#ag-acceso h2,#ag-modal b,#ag-menu b{text-transform:none;letter-spacing:0;font-weight:800}
+#ag-acceso a,#ag-modal a,#ag-menu a{display:inline;padding:0;margin:0;background:none;border:0;font:inherit;line-height:inherit;transform:none;box-shadow:none}
+#ag-acceso button,#ag-modal button{font:inherit}
+#ag-acceso .ag-caja{width:min(440px,94vw);background:rgba(16,20,30,.86);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:26px 28px 20px;box-shadow:0 30px 90px rgba(0,0,0,.6);backdrop-filter:blur(18px);animation:agUp .35s ease}
+@keyframes agUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+#ag-acceso .ag-marca{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+#ag-acceso .ag-marca .ico{font-size:34px;line-height:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5))}
+#ag-acceso .ag-marca b{font-size:19px;display:block}
+#ag-acceso .ag-marca small{color:#93a0b4;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+#ag-acceso h2{margin:14px 0 4px;font-size:17px}
+#ag-acceso .ag-sub{color:#93a0b4;font-size:12.5px;margin-bottom:14px}
+#ag-acceso .ag-cuentas{display:grid;gap:8px;margin-bottom:12px}
+#ag-acceso .ag-cuenta{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);cursor:pointer;transition:border-color .15s,background .15s,transform .15s;text-align:left;color:inherit;font:inherit;width:100%}
+#ag-acceso .ag-cuenta:hover{background:rgba(255,255,255,.06);transform:translateY(-1px)}
+#ag-acceso .ag-cuenta.on{border-color:#6ea8fe;background:rgba(110,168,254,.12)}
+#ag-acceso .ag-cuenta small{display:block;color:#93a0b4;font-size:11.5px}
+.ag-ava{width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,#6ea8fe,#a78bfa);flex:none}
+#ag-acceso label{display:block;font-size:12px;color:#93a0b4;margin:10px 0 4px}
+#ag-acceso input[type=text],#ag-acceso input[type=password]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.35);color:#eaf0f7;font:inherit;outline:none}
+#ag-acceso input:focus{border-color:#6ea8fe;box-shadow:0 0 0 3px rgba(110,168,254,.18)}
+#ag-acceso .ag-check{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:#c9d2df;margin-top:12px;cursor:pointer}
+#ag-acceso .ag-check input{margin-top:3px}
+#ag-acceso .ag-boton{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:14px;padding:11px 14px;border-radius:11px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(135deg,#6ea8fe,#7c8cff);color:#0b1020;font:inherit;font-weight:800;cursor:pointer;transition:transform .15s,filter .15s}
+#ag-acceso .ag-boton:hover{transform:translateY(-1px);filter:brightness(1.08)}
+#ag-acceso .ag-boton:disabled{opacity:.6;cursor:default;transform:none}
+#ag-acceso .ag-boton.sec{background:rgba(255,255,255,.06);color:#eaf0f7;font-weight:600}
+#ag-acceso .ag-error{margin-top:10px;padding:8px 10px;border-radius:9px;background:rgba(255,90,90,.14);border:1px solid rgba(255,90,90,.35);color:#ffb3b3;font-size:12.5px}
+#ag-acceso .ag-error:empty{display:none}
+#ag-acceso .ag-links{display:flex;justify-content:space-between;gap:10px;margin-top:12px;font-size:12px;color:#93a0b4;flex-wrap:wrap}
+#ag-acceso a,#ag-modal a{color:#8fbcff;cursor:pointer;text-decoration:none}
+#ag-acceso a:hover,#ag-modal a:hover{text-decoration:underline}
+#ag-acceso .ag-pie{margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);color:#6b7686;font-size:11px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+#ag-acceso .ag-pie b{color:#93a0b4;font-weight:700}
+/* chip de cuenta */
+#ag-chip{position:fixed;right:14px;bottom:12px;z-index:99980;display:inline-flex;align-items:center;gap:8px;padding:5px 10px 5px 5px;border-radius:999px;background:rgba(14,18,28,.85);border:1px solid rgba(255,255,255,.12);color:#eaf0f7;font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;cursor:pointer;backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,.4);transition:transform .15s}
+#ag-chip:hover{transform:translateY(-1px)}
+#ag-chip .ag-ava{width:24px;height:24px;font-size:10px}
+#ag-chip small{color:#93a0b4}
+#ag-menu{position:fixed;right:14px;bottom:52px;z-index:99985;width:280px;background:rgba(14,18,28,.96);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px;color:#eaf0f7;font:12.5px -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;box-shadow:0 20px 60px rgba(0,0,0,.55);animation:agUp .2s ease}
+#ag-menu .ag-cab{display:flex;gap:10px;align-items:center;padding:6px 6px 10px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:6px}
+#ag-menu .ag-cab small{display:block;color:#93a0b4;font-size:11px}
+#ag-menu a.it{display:flex;align-items:center;gap:8px;padding:8px 8px;border-radius:9px;color:#eaf0f7;cursor:pointer;text-decoration:none}
+#ag-menu a.it:hover{background:rgba(255,255,255,.07)}
+#ag-menu a.it.rojo{color:#ff9c9c}
+#ag-menu .ag-apps{padding:6px 8px 2px;color:#6b7686;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em}
+#ag-menu a.app{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:8px;color:#c9d2df;text-decoration:none;cursor:pointer}
+#ag-menu a.app:hover{background:rgba(255,255,255,.07)}
+#ag-menu a.app small{color:#6b7686;font-family:ui-monospace,Menlo,monospace}
+#ag-menu a.app.esta{color:#8fbcff}
+/* modal genérico (términos, contraseña, acerca de) */
+#ag-modal{position:fixed;inset:0;z-index:99995;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px;color:#eaf0f7;font:13.5px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
+#ag-modal .ag-hoja{width:min(760px,96vw);max-height:90vh;overflow:auto;background:#0f131c;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:18px 22px 22px;box-shadow:0 30px 90px rgba(0,0,0,.7);animation:agUp .25s ease}
+#ag-modal .ag-hoja.peq{width:min(420px,96vw)}
+#ag-modal .ag-cab{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+#ag-modal .ag-cab b{font-size:16px}
+#ag-modal .ag-cerrar{cursor:pointer;color:#93a0b4;font-size:20px;padding:2px 8px;border-radius:8px}
+#ag-modal .ag-cerrar:hover{background:rgba(255,255,255,.08);color:#fff}
+#ag-modal .ag-md h1,#ag-modal .ag-md h2,#ag-modal .ag-md h3{text-transform:none;letter-spacing:0}
+#ag-modal .ag-md h1{font-size:19px;margin:8px 0 6px}#ag-modal .ag-md h2{font-size:15px;margin:16px 0 4px;color:#8fbcff}#ag-modal .ag-md h3{font-size:13.5px;margin:12px 0 4px}
+#ag-modal .ag-md p{margin:6px 0;color:#c9d2df}#ag-modal .ag-md ul,#ag-modal .ag-md ol{margin:6px 0 6px 20px;color:#c9d2df}#ag-modal .ag-md li{margin:3px 0}
+#ag-modal .ag-md code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12px}
+#ag-modal .ag-md blockquote{border-left:3px solid #6ea8fe;margin:8px 0;padding:4px 10px;color:#93a0b4}
+#ag-modal .ag-md table{border-collapse:collapse;margin:8px 0;font-size:12.5px}#ag-modal .ag-md th,#ag-modal .ag-md td{border:1px solid rgba(255,255,255,.12);padding:5px 8px;text-align:left}
+#ag-modal label{display:block;font-size:12px;color:#93a0b4;margin:10px 0 4px}
+#ag-modal input[type=password],#ag-modal input[type=text]{width:100%;padding:9px 11px;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.35);color:#eaf0f7;font:inherit;outline:none}
+#ag-modal .ag-boton{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(135deg,#6ea8fe,#7c8cff);color:#0b1020;font:inherit;font-weight:800;cursor:pointer;margin-top:12px}
+#ag-modal .ag-boton.sec{background:rgba(255,255,255,.06);color:#eaf0f7;font-weight:600}
+#ag-modal .ag-boton.rojo{background:linear-gradient(135deg,#ff6b6b,#ff8f70)}
+#ag-modal .ag-error{margin-top:10px;color:#ffb3b3;font-size:12.5px}#ag-modal .ag-error:empty{display:none}
+#ag-modal .ag-acerca{display:grid;gap:6px}
+#ag-modal .ag-acerca .fila{display:flex;justify-content:space-between;gap:10px;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+#ag-modal .ag-acerca .fila small{color:#6b7686;font-family:ui-monospace,Menlo,monospace}
+#ag-modal .ag-firma{margin-top:14px;color:#6b7686;font-size:11.5px;text-align:center}

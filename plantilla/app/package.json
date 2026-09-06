@@ -1,0 +1,8 @@
+{
+  "name": "__ID__-app",
+  "productName": "__NOMBRE__",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {"start": "electron .", "empaquetar": "electron-packager . \"__NOMBRE__\" --platform=darwin --arch=arm64 --out=dist --overwrite --icon=icon.icns"},
+  "devDependencies": {"electron": "^33.0.0", "electron-packager": "^17.1.2"}
+}
