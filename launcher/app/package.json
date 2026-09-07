@@ -1,0 +1,9 @@
+{
+  "name": "ag-launcher-app",
+  "productName": "AG Launcher",
+  "version": "1.0.0",
+  "description": "La tienda de AG Creations: instala, actualiza y abre todas las apps",
+  "main": "main.js",
+  "scripts": { "start": "electron ." },
+  "devDependencies": { "electron": "^44.0.0" }
+}

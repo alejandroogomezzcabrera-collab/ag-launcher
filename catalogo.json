@@ -3,13 +3,31 @@
  "propietario": "Alejandro Gómez Cabrera",
  "apps": [
   {
+   "id": "ag-launcher",
+   "nombre": "AG Launcher",
+   "icono": "🏛",
+   "carpeta": "~/ag-creations/launcher",
+   "puerto": 8282,
+   "descripcion": "la tienda del imperio: instala, actualiza y abre todas las apps",
+   "launchd": "com.ag.launcher-panel",
+   "servicios": [
+    "com.ag.launcher-panel"
+   ],
+   "instalador": "instalar.sh"
+  },
+  {
    "id": "shorts-factory",
    "nombre": "Shorts Factory",
    "icono": "🎬",
    "carpeta": "~/shorts-factory-v2",
    "puerto": 8585,
    "descripcion": "fábrica autónoma de shorts para YouTube",
-   "launchd": "com.ag.shorts-panel"
+   "launchd": "com.ag.shorts-panel",
+   "servicios": [
+    "com.ag.shorts-panel",
+    "com.ag.shorts-factory"
+   ],
+   "instalador": "scripts/instalar_launchd.sh"
   },
   {
    "id": "llm-lab",
@@ -18,7 +36,11 @@
    "carpeta": "~/llm-lab",
    "puerto": 8686,
    "descripcion": "un GPT desde cero, por dentro, con curso interactivo",
-   "launchd": "com.ag.llm-panel"
+   "launchd": "com.ag.llm-panel",
+   "servicios": [
+    "com.ag.llm-panel"
+   ],
+   "instalador": "scripts_instalar.sh"
   },
   {
    "id": "second-brain",
@@ -27,7 +49,12 @@
    "carpeta": "~/second-brain",
    "puerto": 8787,
    "descripcion": "la memoria de largo plazo de Claude, en 3D",
-   "launchd": "com.ag.brain-panel"
+   "launchd": "com.ag.brain-panel",
+   "servicios": [
+    "com.ag.brain-panel",
+    "com.ag.brain-indexar"
+   ],
+   "instalador": "scripts_instalar.sh"
   },
   {
    "id": "bot-lab",
@@ -38,7 +65,13 @@
    "descripcion": "laboratorio de trading con dinero ficticio; se reparte a amigos",
    "launchd": "com.ag.paper-panel",
    "version": "3.16.1",
-   "nucleo": "propio"
+   "nucleo": "propio",
+   "servicios": [
+    "com.ag.paper-panel",
+    "com.ag.paper-trading-bot",
+    "com.ag.paper-vigilante"
+   ],
+   "repo": "https://github.com/alejandroogomezzcabrera-collab/bot_lab.git"
   }
  ]
 }

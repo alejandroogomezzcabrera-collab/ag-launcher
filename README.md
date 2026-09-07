@@ -5,6 +5,7 @@ sin servidores ni cuentas en internet, y todas comparten este núcleo.
 
 | app | carpeta | puerto | qué es |
 |---|---|---|---|
+| 🏛 AG Launcher | `~/ag-creations/launcher` | 8282 | la tienda: instala, actualiza, abre y quita las demás apps |
 | 🎬 Shorts Factory | `~/shorts-factory-v2` | 8585 | fábrica autónoma de shorts para YouTube |
 | 🧠 LLM Lab | `~/llm-lab` | 8686 | un GPT desde cero, por dentro, con curso interactivo |
 | 🌌 Second Brain AI | `~/second-brain` | 8787 | la memoria de largo plazo de Claude, en 3D |
@@ -44,6 +45,16 @@ G = Guardia("mi-app", PUERTO, BASE)
 
 En `index.html`: `<link rel="stylesheet" href="/ag/acceso.css">` y `<script src="/ag/acceso.js"></script>`
 antes del `app.js`; en `app.js`, el arranque dentro de `AG.listo(() => {...})`.
+
+## El launcher (`launcher/`)
+
+`/Applications/AG Launcher.app` (panel en el puerto 8282, launchd `com.ag.launcher-panel`). Enseña la
+biblioteca con el estado real de cada app: carpeta, entorno de Python, servicios de launchd, app de
+escritorio, versión en marcha y última versión etiquetada en GitHub si el proyecto tiene remoto. Botones:
+Instalar (entorno + servicios + bundle), Actualizar (git pull conservando cambios locales, dependencias
+si cambiaron, reinicio del panel, bundle nuevo), Abrir, Reiniciar el panel, Ver registro, Abrir carpeta,
+Quitar (servicios y bundle; la carpeta y los datos se quedan). Cada tarea escribe su registro en vivo en
+la consola de abajo. El motor es `agcore/tienda.py`; instalar el launcher: `launcher/instalar.sh`.
 
 ## La consola: `agc.py`
 
