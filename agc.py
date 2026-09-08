@@ -292,6 +292,8 @@ def ipad(ns):
         print(f"{a['icono']} {a['nombre']}: acceso desde otros dispositivos {'ABIERTO (' + str(e['modo']) + ')' if e['activo'] else 'cerrado'}")
         if e["url"]:
             print(f"  Dirección: {e['url']}")
+            if e.get("url_ip") and e["url_ip"] != e["url"]:
+                print(f"  Si esa no va, por IP: {e['url_ip']}")
         print(f"  Tailscale: {e['tailscale'] or 'no instalado'} · Red de casa: {e['lan'] or '—'}")
         return
     ok, msg = remoto.desactivar(base) if ns.modo == "off" else remoto.activar(base, puerto, ns.modo)

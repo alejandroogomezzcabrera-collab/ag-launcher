@@ -89,8 +89,10 @@ def estado(base: Path, puerto: int) -> dict:
     d = direcciones()
     activo = bool(c.get("activo"))
     ip = (c.get("hosts") or [""])[0].split(":")[0] if c.get("hosts") else None
-    return {"activo": activo, "modo": c.get("modo"), "ip": ip, "puerto": puerto,
-            "url": f"http://{ip}:{puerto}/" if activo and ip else None,
+    nombre = c.get("nombre")
+    return {"activo": activo, "modo": c.get("modo"), "ip": ip, "puerto": puerto, "nombre": nombre,
+            "url": f"http://{nombre or ip}:{puerto}/" if activo and (nombre or ip) else None,
+            "url_ip": f"http://{ip}:{puerto}/" if activo and ip else None,
             "tailscale": d["tailscale"], "lan": d["lan"], "equipo": d["equipo"]}
 
 
@@ -104,10 +106,14 @@ def activar(base: Path, puerto: int, modo: str = "tailscale") -> tuple[bool, str
                        "inicia sesión con la misma cuenta en los dos y vuelve a intentarlo") if modo == "tailscale" \
                       else "no encuentro la dirección de este ordenador en la red"
     hosts = [f"{ip}:{puerto}"]
+    nombre = None
     if modo == "lan":
-        hosts.append(f"{socket.gethostname().split('.')[0]}.local:{puerto}")
-    _escribir(Path(base), {"activo": True, "modo": modo, "host": "0.0.0.0", "hosts": hosts,
+        nombre = socket.gethostname().split(".")[0] + ".local"
+        hosts.append(f"{nombre}:{puerto}")
+    _escribir(Path(base), {"activo": True, "modo": modo, "host": "0.0.0.0", "hosts": hosts, "nombre": nombre,
                            "nota": "lo escribió la app; para cerrarlo del todo pon activo en false o borra este fichero"})
+    if nombre:                       # el nombre del ordenador no cambia aunque el router dé otra IP
+        return True, f"http://{nombre}:{puerto}/   (o http://{ip}:{puerto}/ si el nombre no te funciona)"
     return True, f"http://{ip}:{puerto}/"
 
 

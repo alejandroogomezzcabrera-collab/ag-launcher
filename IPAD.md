@@ -1,14 +1,15 @@
 # Tus apps de AG Creations en el iPad (y en el iPhone)
 
 Todas las apps de AG Creations (AG Launcher, Bot Lab, LLM Lab, Second Brain, Shorts Factory) se
-pueden abrir desde el iPad como una app más: icono en la pantalla de inicio, a pantalla completa y
-sin barra de navegador. El iPad es **una ventana** a lo que corre en tu ordenador, con la misma
-cuenta, la misma contraseña y las mismas barreras de seguridad.
+abren desde el iPad como una app más: icono en la pantalla de inicio, a pantalla completa y sin
+barra de navegador. El iPad es **una ventana** a lo que corre en tu ordenador, con la misma cuenta,
+la misma contraseña y las mismas barreras de seguridad.
 
-En el caso de Bot Lab: los 16 bots, el torneo y las operaciones siguen corriendo en tu Mac o en tu
-PC; el iPad solo lo mira y lo controla.
+En Bot Lab: los 16 bots, el torneo y las operaciones siguen corriendo en tu Mac o en tu PC; el iPad
+solo lo mira y lo controla. La orden equivalente para las demás apps es
+`python3 ~/ag-creations/agc.py ipad lan <app>` (o `tailscale`, o `off`).
 
-**Por qué el trabajo no se hace en el iPad.** iOS no deja que un programa siga trabajando en segundo
+**Por qué no puede operar el propio iPad.** iOS no deja que un programa siga trabajando en segundo
 plano indefinidamente, ni tiene Python, ni git, ni tareas programadas cada cinco minutos. Un Bot Lab
 que operase dentro del iPad se pararía en cuanto cerrases la app o bloqueases la pantalla. Por eso
 el trabajo se queda en el ordenador, que además es donde viven tus claves.
@@ -26,40 +27,39 @@ Las claves de Alpaca **no se escriben nunca en el iPad**: ya están en el ordena
 
 ---
 
-## Opción A · Tailscale (recomendada: funciona desde cualquier sitio)
-
-Tailscale crea una red privada solo tuya entre tus dispositivos. Es gratis para uso personal y no
-abre nada a internet.
-
-1. **En el ordenador**: instala Tailscale desde https://tailscale.com/download e inicia sesión.
-2. **En el iPad**: instala Tailscale desde la App Store e inicia sesión **con la misma cuenta**.
-3. **En el ordenador**, en la carpeta de Bot Lab:
-
-   - Mac: `./venv/bin/python ipad.py tailscale`
-   - Windows: `venv\Scripts\python.exe ipad.py tailscale`
-
-   (para las demás apps de AG Creations, la orden equivalente es
-   `python3 ~/ag-creations/agc.py ipad tailscale <app>`)
-
-   Te responderá con una dirección tipo `http://100.x.y.z:8484/`.
-4. **En el iPad**: abre esa dirección en Safari.
-
-Con Tailscale encendido en los dos, esto funciona igual en casa, en el móvil o de vacaciones, y
-nadie más puede ver el panel: solo tus propios dispositivos.
-
-## Opción B · La wifi de casa (más simple, solo en casa)
+## Opción A · La wifi de casa (no hay que instalar nada en el iPad)
 
 1. En el ordenador, en la carpeta de Bot Lab:
 
    - Mac: `./venv/bin/python ipad.py lan`
    - Windows: `venv\Scripts\python.exe ipad.py lan`
 
-   Te dará una dirección tipo `http://192.168.0.84:8484/`.
-2. En el iPad, con la misma wifi, abre esa dirección en Safari.
+   Te dará dos direcciones: una con el **nombre del ordenador** (`http://MiMac.local:8484/`) y otra
+   con su IP (`http://192.168.0.84:8484/`). Usa la del nombre: no cambia aunque reinicies el router.
+2. En el iPad, con la misma wifi, abre esa dirección en **Safari**.
 
-Aviso honesto: en este modo, cualquiera conectado a esa wifi puede llegar a la **pantalla de
-acceso** de Bot Lab. Para entrar sigue necesitando tu contraseña, pero si compartes la wifi con
-gente que no conoces, usa la opción A.
+Solo funciona dentro de tu casa, y mientras esté abierto cualquiera conectado a esa wifi puede
+llegar a la **pantalla de acceso** de Bot Lab (para entrar sigue haciendo falta tu contraseña). Si
+compartes la wifi con gente que no conoces, usa la opción B.
+
+## Opción B · Tailscale (desde cualquier sitio; hay que instalar su app)
+
+Tailscale crea una red privada solo tuya entre tus dispositivos. Es gratis para uso personal, no
+abre nada a internet y la dirección no cambia nunca.
+
+1. **En el ordenador**: instala Tailscale desde https://tailscale.com/download e inicia sesión.
+2. **En el iPad**: instala Tailscale desde la App Store e inicia sesión **con la misma cuenta**.
+   (Si el iPad no tiene espacio o no puede instalarla, quédate con la opción A.)
+3. **En el ordenador**, en la carpeta de Bot Lab:
+
+   - Mac: `./venv/bin/python ipad.py tailscale`
+   - Windows: `venv\Scripts\python.exe ipad.py tailscale`
+
+   Te responderá con una dirección tipo `http://100.x.y.z:8484/`.
+4. **En el iPad**: abre esa dirección en Safari.
+
+Con Tailscale encendido en los dos, funciona igual en casa, con datos del móvil o de vacaciones, y
+nadie más puede ver el panel: solo tus propios dispositivos.
 
 ## Cerrarlo
 
@@ -117,5 +117,9 @@ exactamente igual:
 - **«No es privado» o aviso de Safari**: es normal, la conexión es dentro de tu propia red y no
   lleva certificado. Continúa; nada sale a internet.
 - **El icono abre una página en blanco**: el ordenador se habrá dormido. Despiértalo y recarga.
-- **Cambiaste de red y ya no funciona**: la IP de casa cambia; vuelve a ejecutar `ipad.py lan` (con
-  Tailscale la dirección no cambia nunca).
+- **La dirección con `.local` no carga**: algunos routers o redes con «aislamiento de clientes»
+  bloquean el descubrimiento por nombre. Usa la dirección con IP que te da `ipad.py`.
+- **Cambiaste de red y ya no funciona**: la IP de casa cambia al reiniciar el router; vuelve a
+  ejecutar `ipad.py` para ver la dirección buena (con el nombre `.local` o con Tailscale no cambia).
+- **El icono ocupa espacio**: no. Añadir a pantalla de inicio guarda un acceso directo de unos pocos
+  kilobytes, no una app.

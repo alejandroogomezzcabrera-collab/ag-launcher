@@ -1,5 +1,9 @@
 # Cambios de agcore
 
+## 1.3.1 — 2026-09-08
+
+- iPad por la wifi sin instalar nada: dirección por el nombre del ordenador (.local), estable aunque cambie la IP; IPAD.md empieza por esa opción
+
 ## 1.3.0 — 2026-09-08
 
 - iPad y móvil: todas las apps se instalan como app (manifest, icono y diseño táctil, inyectado por agcore en cualquier panel) y se abren a tus dispositivos con agc.py ipad (Tailscale o wifi), sin tocar ninguna barrera; guía de primeros pasos al crear la cuenta en cada app; IPAD.md
