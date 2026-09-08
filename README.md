@@ -17,6 +17,21 @@ pero no se enseñan en modo amigo.
 En [Releases](../../releases) de este repositorio: `AG-Launcher-vX.Y.Z.zip`. Cada versión está
 **etiquetada y firmada** (Ed25519) por el propietario; el launcher solo se actualiza a versiones así.
 
+## En el iPad o el móvil
+
+Cualquier app de AG Creations se puede abrir desde tu iPad como una app más (icono en la pantalla de
+inicio, a pantalla completa). El iPad es una ventana a lo que corre en tu ordenador: entras con la
+misma cuenta y no se guarda ninguna clave en él. Se abre el acceso con una orden y se cierra con
+otra:
+
+```
+python3 agc.py ipad tailscale bot-lab     # por tu red privada Tailscale (desde cualquier sitio)
+python3 agc.py ipad lan bot-lab           # por la wifi de casa
+python3 agc.py ipad off bot-lab           # cerrado (como viene de fábrica)
+```
+
+Instrucciones completas y avisos de seguridad en [IPAD.md](IPAD.md).
+
 ## Qué necesitas
 
 - **Python 3.11 o más nuevo.** Windows: [python.org](https://www.python.org/downloads/windows/), y en el

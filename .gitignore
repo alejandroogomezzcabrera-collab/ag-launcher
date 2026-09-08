@@ -10,3 +10,4 @@ app/node_modules/
 launcher/app/node_modules/
 .pytest_cache/
 .DS_Store
+acceso_remoto.json

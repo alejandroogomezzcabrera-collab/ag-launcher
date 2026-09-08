@@ -69,3 +69,25 @@ body{margin:0;background:var(--bg);color:var(--tx);font:13.5px/1.45 -apple-syste
 .dialogo{background:var(--panel);border:1px solid var(--borde2);border-radius:var(--r);padding:22px 24px;width:min(560px,92vw);max-height:90vh;overflow:auto;box-shadow:var(--sombra)}
 .dialogo h2{margin:0 0 6px;font-size:19px}
 .dialogo a[href],.caja a[href]{color:var(--azul)}
+
+/* ── iPad, iPhone y pantallas táctiles ─────────────────────────────────────── */
+html{-webkit-text-size-adjust:100%}
+body{overscroll-behavior:none}
+#lateral{padding-top:calc(44px + env(safe-area-inset-top))}
+#principal{padding-bottom:calc(30px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+@media (pointer:coarse){
+  .boton{min-height:40px;padding:10px 15px}
+  .menu a{padding:11px 10px}
+  input,select,textarea{font-size:16px}
+  .tarjeta:hover{transform:none}
+}
+@media (max-width:860px){
+  body{grid-template-columns:72px 1fr}
+  .marca div,.nav a span:not(:first-child),.nav a{font-size:12px}
+  .nav a{justify-content:center;padding:10px 0}
+  .nav a:not(.on) span+*{display:none}
+  .lateral-pie{display:none}
+  .hero{padding:28px 18px 16px}
+  .seccion{padding:6px 18px 0}
+  .rejilla{grid-template-columns:1fr}
+}

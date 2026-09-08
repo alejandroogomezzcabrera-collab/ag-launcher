@@ -278,6 +278,34 @@ def nuevo(ns):
 
 
 # ----------------------------------------------------------------- comprobar
+def ipad(ns):
+    """Abre una app de AG Creations a tus otros dispositivos (iPad, móvil). Ver IPAD.md."""
+    from agcore import carpeta_de, remoto
+    a = next((x for x in catalogo() if x["id"] == ns.app), None)
+    if a is None:
+        sys.exit(f"app desconocida: {ns.app}")
+    base, puerto = carpeta_de(a), a.get("puerto")
+    if not puerto:
+        sys.exit(f"{a['nombre']} no tiene panel")
+    if ns.modo == "estado":
+        e = remoto.estado(base, puerto)
+        print(f"{a['icono']} {a['nombre']}: acceso desde otros dispositivos {'ABIERTO (' + str(e['modo']) + ')' if e['activo'] else 'cerrado'}")
+        if e["url"]:
+            print(f"  Dirección: {e['url']}")
+        print(f"  Tailscale: {e['tailscale'] or 'no instalado'} · Red de casa: {e['lan'] or '—'}")
+        return
+    ok, msg = remoto.desactivar(base) if ns.modo == "off" else remoto.activar(base, puerto, ns.modo)
+    print(("✓ " if ok else "✗ ") + msg)
+    if ok and a.get("servicios_mac") or a.get("launchd"):
+        from agcore import so
+        for label in (a.get("servicios_mac") or [a.get("launchd")]):
+            if label:
+                so.reiniciar_servicio(label, base)
+        print("  panel reiniciado")
+    if ok and ns.modo != "off":
+        print("  En el iPad: abre esa dirección en Safari → Compartir → «Añadir a pantalla de inicio».")
+
+
 def comprobar(_):
     py = _python_con("pytest")
     if py is None:
@@ -315,5 +343,9 @@ if __name__ == "__main__":
     s.add_argument("--todo", action="store_true", help="incluye en el commit todos los cambios de la carpeta"); s.set_defaults(fn=subir)
     n = sp.add_parser("nuevo"); n.add_argument("id"); n.add_argument("--nombre", required=True); n.add_argument("--icono", default="🧩"); n.add_argument("--puerto", type=int, required=True)
     n.add_argument("--descripcion", default=""); n.add_argument("--carpeta", default=""); n.set_defaults(fn=nuevo)
+    ip = sp.add_parser("ipad", help="abre (o cierra) una app para verla desde el iPad")
+    ip.add_argument("modo", choices=["tailscale", "lan", "off", "estado"])
+    ip.add_argument("app", nargs="?", default="ag-launcher")
+    ip.set_defaults(fn=ipad)
     sp.add_parser("comprobar").set_defaults(fn=comprobar)
     ns = p.parse_args(); ns.fn(ns)

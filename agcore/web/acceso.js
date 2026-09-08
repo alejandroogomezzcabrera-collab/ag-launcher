@@ -87,7 +87,7 @@
       } else {
         d = await AG.post("/ag/auth/entrar", {id: f.get("id"), contrasena: f.get("contrasena"), acepta_terminos: !!f.get("acepta")});
       }
-      entrar(d.cuenta);
+      entrar(d.cuenta, true);
     } catch (e) {
       S.ocupado = false;
       if (e.codigo === 428) {S.error = "tienes que aceptar los términos y la política de privacidad de esta app para entrar"; if (e.datos && e.datos.cuenta) {const c = S.cuentas.find(x => x.id === e.datos.cuenta.id); if (c) c.terminos = e.datos.cuenta.terminos;}}
@@ -96,12 +96,23 @@
     }
     return false;
   }
-  function entrar(cuenta) {
+  function entrar(cuenta, primeraVez) {
     AG.cuenta = cuenta; S.ocupado = false;
     const c = $("#ag-acceso"); if (c) c.remove();
     pintarChip();
     if (!AG._listo) {AG._listo = true; AG._cb.forEach(cb => {try {cb(cuenta);} catch (e) {console.error(e);}});}
+    // Primeros pasos: al crear la cuenta o al entrar por primera vez en esta app con ella
+    let visto = false; try {visto = localStorage.getItem("ag.pasos." + ((AG.app || {}).app || "") + "." + cuenta.id) === "1";} catch (e) {}
+    if (primeraVez && !visto) AG.primerosPasos();
   }
+  AG.primerosPasos = async () => {
+    const a = AG.app || {};
+    let md; try {const r = await _fetch("/ag/primeros-pasos", {cache: "no-store"}); md = await r.text();} catch (e) {md = "";}
+    if (!md || /aún no tiene/.test(md)) return;
+    const m = modal(`<div class="ag-cab"><b>🧭 Primeros pasos en ${esc(a.nombre || "esta app")}</b><a class="ag-cerrar" onclick="AG.cerrarModal()">✕</a></div><div class="ag-md">${mdMin(md)}</div>
+      <button class="ag-boton" id="ag-pasos-ok">Entendido, vamos allá</button><p style="color:#6b7686;font-size:11.5px;margin-top:10px">Siempre podrás volver a esta guía desde el menú de tu cuenta (abajo a la derecha).</p>`);
+    m.querySelector("#ag-pasos-ok").onclick = () => {try {localStorage.setItem("ag.pasos." + (a.app || "") + "." + (AG.cuenta || {}).id, "1");} catch (e) {} m.remove();};
+  };
   async function mostrar() {
     try {const d = await (await _fetch("/ag/cuentas", {cache: "no-store"})).json(); S.cuentas = d.cuentas || []; AG.app = d.app;} catch (e) {S.cuentas = [];}
     S.cuentas.sort((a, b) => String((b.ultima || {})[AG.app && AG.app.app] || b.creada || "").localeCompare(String((a.ultima || {})[AG.app && AG.app.app] || a.creada || "")));
@@ -122,6 +133,7 @@
     const m = document.createElement("div"); m.id = "ag-menu";
     m.innerHTML = `<div class="ag-cab"><span class="ag-ava">${esc(ini(c))}</span><div><b>${esc(c.nombre)} ${esc(c.apellido)}</b><small>cuenta local · ${esc(a.nombre)} v${esc(a.version)}</small></div></div>
       <a class="it" onclick="AG.verTerminos()">📜 Términos de ${esc(a.nombre)}</a>
+      <a class="it" onclick="AG.primerosPasos()">🧭 Primeros pasos</a>
       <a class="it" onclick="AG.verPrivacidad()">🔒 Privacidad</a>
       <a class="it" onclick="AG.verLicencia()">📄 Licencia</a>
       <a class="it" onclick="AG.cambiarContrasena()">🔑 Cambiar contraseña</a>
@@ -165,6 +177,26 @@
   };
   AG.salir = async () => {try {await AG.post("/ag/auth/salir");} catch (e) {} location.reload();};
 
+  // ── app instalable (iPad, móvil, escritorio) ──────────────────────────────
+  function etiquetasApp() {
+    const poner = (tag, attrs) => {
+      const sel = tag + Object.entries(attrs).filter(([k]) => k !== "content" && k !== "href").map(([k, v]) => `[${k}="${v}"]`).join("");
+      if (document.head.querySelector(sel)) return;
+      const el = document.createElement(tag);
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      document.head.appendChild(el);
+    };
+    poner("link", {rel: "manifest", href: "/ag/manifest.webmanifest"});
+    poner("link", {rel: "apple-touch-icon", href: "/ag/icono.png"});
+    poner("meta", {name: "apple-mobile-web-app-capable", content: "yes"});
+    poner("meta", {name: "mobile-web-app-capable", content: "yes"});
+    poner("meta", {name: "apple-mobile-web-app-status-bar-style", content: "black-translucent"});
+    poner("meta", {name: "apple-mobile-web-app-title", content: (AG.app || {}).nombre || document.title});
+    poner("meta", {name: "theme-color", content: "#0a0d14"});
+    const vp = document.head.querySelector('meta[name="viewport"]');   // que no haga zoom al tocar un campo
+    if (vp && !/viewport-fit/.test(vp.content)) vp.content = "width=device-width, initial-scale=1, viewport-fit=cover";
+  }
+
   // ── arranque ────────────────────────────────────────────────────────────────
   async function arrancar() {
     try {
@@ -186,5 +218,6 @@
     } catch (e) {}
     mostrar();
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", arrancar); else arrancar();
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => {etiquetasApp(); arrancar();});
+  else {etiquetasApp(); arrancar();}
 })();

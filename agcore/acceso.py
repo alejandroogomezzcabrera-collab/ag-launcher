@@ -22,7 +22,7 @@ import json
 import time
 from pathlib import Path
 
-from . import EMPRESA, RAIZ, VERSION, app_del_catalogo, catalogo, cuentas
+from . import EMPRESA, RAIZ, VERSION, app_del_catalogo, catalogo, cuentas, remoto
 
 WEB = Path(__file__).resolve().parent / "web"
 CSP = ("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "
@@ -42,6 +42,7 @@ class Guardia:
         self.terminos = self.base / terminos
         self.licencia = RAIZ / "LICENCIA.md"
         self.hosts = {f"localhost:{puerto}", f"127.0.0.1:{puerto}", f"[::1]:{puerto}"}
+        self.hosts |= remoto.hosts_permitidos(self.base)     # tu iPad, si has abierto el acceso
         self.origenes = {f"http://{h}" for h in self.hosts}
         self.cookie = "ag_" + app.replace("-", "_")
 
@@ -72,6 +73,16 @@ class Guardia:
                 "version": a.get("version") or "?", "empresa": EMPRESA, "agcore": VERSION,
                 "terminos": self.terminos_version(),
                 "catalogo": [{k: x[k] for k in CAMPOS_CATALOGO if k in x} for x in catalogo()]}
+
+    def manifiesto(self) -> dict:
+        """Para poder «instalar» la app en un iPad, un móvil o el escritorio (Añadir a pantalla de
+        inicio). Se sirve en /ag/manifest.webmanifest; acceso.js lo enlaza solo en cada app."""
+        a = self.info()
+        return {"name": f"{a['nombre']} · AG Creations", "short_name": a["nombre"], "id": f"/?app={self.app}",
+                "start_url": "/", "scope": "/", "display": "standalone", "orientation": "any",
+                "background_color": "#0a0d14", "theme_color": "#0a0d14", "lang": "es",
+                "description": app_del_catalogo(self.app).get("descripcion", ""),
+                "icons": [{"src": "/ag/icono.png", "sizes": s, "type": "image/png", "purpose": "any"} for s in ("192x192", "512x512", "1024x1024")]}
 
     # ------------------------------------------------------------ respuesta
     def cabeceras(self, h) -> None:
@@ -169,14 +180,22 @@ class Guardia:
             self._json(h, 200, {"cuentas": cuentas.listar(), "app": self.info()})
         elif ruta == "/ag/version":
             self._json(h, 200, self.info())
-        elif ruta in ("/ag/terminos", "/ag/privacidad", "/ag/licencia"):
+        elif ruta in ("/ag/terminos", "/ag/privacidad", "/ag/licencia", "/ag/primeros-pasos"):
             f, titulo = {"/ag/terminos": (self.terminos, "Términos"), "/ag/privacidad": (self.privacidad, "Política de privacidad"),
-                         "/ag/licencia": (self.licencia, "Licencia")}[ruta]
+                         "/ag/licencia": (self.licencia, "Licencia"), "/ag/primeros-pasos": (self.base / "PRIMEROS_PASOS.md", "Primeros pasos")}[ruta]
             try:
                 cuerpo = f.read_bytes()
             except OSError:
                 cuerpo = f"# {titulo} de {self.app}\n\n(esta app aún no tiene {f.name})".encode()
             self._responder(h, 200, cuerpo, "text/markdown; charset=utf-8")
+        elif ruta == "/ag/manifest.webmanifest":
+            self._json(h, 200, self.manifiesto())
+        elif ruta == "/ag/icono.png":
+            icono = self.base / "app" / "icon.png"
+            if icono.exists():
+                self._responder(h, 200, icono.read_bytes(), "image/png")
+            else:
+                self._responder(h, 404, b"", "text/plain")
         elif ruta in ("/ag/acceso.js", "/ag/acceso.css"):
             f = WEB / ruta[4:]
             self._responder(h, 200, f.read_bytes(), TIPOS[f.suffix])
