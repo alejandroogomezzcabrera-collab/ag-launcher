@@ -49,7 +49,7 @@
   function pintar() {
     const a = AG.app || {}, crear = S.modo === "crear" || !S.cuentas.length, sel = S.cuentas.find(c => c.id === S.sel) || S.cuentas[0];
     const yaAcepto = sel && sel.terminos && sel.terminos[a.app] === a.terminos;
-    const checkTerminos = `<label class="ag-check"><input type="checkbox" name="acepta" required><span>He leído y acepto los <a onclick="AG.verTerminos()">términos de ${esc(a.nombre || "esta app")}</a>: cortos, claros y sin trampas</span></label>`;
+    const checkTerminos = `<label class="ag-check"><input type="checkbox" name="acepta" required><span>He leído y acepto los <a onclick="AG.verTerminos()">términos de uso</a> y la <a onclick="AG.verPrivacidad()">política de privacidad</a>, y soy mayor de edad</span></label>`;
     capa().innerHTML = `<div class="ag-caja">
       <div class="ag-marca"><span class="ico">${esc(a.icono || "🧩")}</span><div><small>AG Creations</small><b>${esc(a.nombre || "")}</b></div></div>
       ${crear ? `<h2>${S.cuentas.length ? "Crear otra cuenta" : "Crea tu cuenta"}</h2><div class="ag-sub">Una cuenta para todas las apps de AG Creations en este dispositivo. No hay servidor: nada sale de aquí.</div>`
@@ -63,11 +63,11 @@
               : `<div class="ag-cuentas">${S.cuentas.map(c => `<button type="button" class="ag-cuenta ${c.id === sel.id ? "on" : ""}" onclick="AG._sel('${esc(c.id)}')"><span class="ag-ava">${esc(ini(c))}</span><span><b>${esc(c.nombre)} ${esc(c.apellido)}</b><small>${c.ultima && c.ultima[a.app] ? "última vez aquí " + hace(c.ultima[a.app]) : c.creada ? "cuenta creada " + hace(c.creada) + (Object.keys(c.ultima || {}).length ? " · usada en otras apps" : "") : ""}</small></span></button>`).join("")}</div>
                  <input type="hidden" name="id" value="${esc(sel.id)}">
                  <label>Contraseña</label><input type="password" name="contrasena" required maxlength="200" autofocus>
-                 ${yaAcepto ? "" : `<div class="ag-sub" style="margin-top:10px">Es tu primera vez en ${esc(a.nombre)} con esta cuenta (o sus términos han cambiado).</div>${checkTerminos}`}`}
+                 ${yaAcepto ? "" : `<div class="ag-sub" style="margin-top:10px">Es tu primera vez en ${esc(a.nombre)} con esta cuenta (o sus términos o su política de privacidad han cambiado).</div>${checkTerminos}`}`}
       <div class="ag-error">${esc(S.error)}</div>
       <button class="ag-boton" ${S.ocupado ? "disabled" : ""}>${S.ocupado ? "…" : crear ? "Crear cuenta y entrar" : "Entrar"}</button>
       </form>
-      <div class="ag-links">${crear && S.cuentas.length ? `<a onclick="AG._modo('entrar')">← ya tengo cuenta</a>` : !crear ? `<a onclick="AG._modo('crear')">crear otra cuenta</a>` : "<span></span>"}<a onclick="AG.verTerminos()">Términos</a></div>
+      <div class="ag-links">${crear && S.cuentas.length ? `<a onclick="AG._modo('entrar')">← ya tengo cuenta</a>` : !crear ? `<a onclick="AG._modo('crear')">crear otra cuenta</a>` : "<span></span>"}<span><a onclick="AG.verTerminos()">Términos</a> · <a onclick="AG.verPrivacidad()">Privacidad</a></span></div>
       <div class="ag-pie"><span><b>${esc(a.nombre || "")}</b> v${esc(a.version || "?")}</span><span>© AG Creations · tus datos se quedan en este dispositivo</span></div>
     </div>`;
     const f = $("#ag-form"); f.onsubmit = enviar;
@@ -90,7 +90,7 @@
       entrar(d.cuenta);
     } catch (e) {
       S.ocupado = false;
-      if (e.codigo === 428) {S.error = "tienes que aceptar los términos de esta app para entrar"; if (e.datos && e.datos.cuenta) {const c = S.cuentas.find(x => x.id === e.datos.cuenta.id); if (c) c.terminos = e.datos.cuenta.terminos;}}
+      if (e.codigo === 428) {S.error = "tienes que aceptar los términos y la política de privacidad de esta app para entrar"; if (e.datos && e.datos.cuenta) {const c = S.cuentas.find(x => x.id === e.datos.cuenta.id); if (c) c.terminos = e.datos.cuenta.terminos;}}
       else S.error = e.message;
       pintar();
     }
@@ -122,6 +122,8 @@
     const m = document.createElement("div"); m.id = "ag-menu";
     m.innerHTML = `<div class="ag-cab"><span class="ag-ava">${esc(ini(c))}</span><div><b>${esc(c.nombre)} ${esc(c.apellido)}</b><small>cuenta local · ${esc(a.nombre)} v${esc(a.version)}</small></div></div>
       <a class="it" onclick="AG.verTerminos()">📜 Términos de ${esc(a.nombre)}</a>
+      <a class="it" onclick="AG.verPrivacidad()">🔒 Privacidad</a>
+      <a class="it" onclick="AG.verLicencia()">📄 Licencia</a>
       <a class="it" onclick="AG.cambiarContrasena()">🔑 Cambiar contraseña</a>
       <a class="it" onclick="AG.acerca()">ℹ️ Acerca de · AG Creations</a>
       <div class="ag-apps">Apps de AG Creations en este equipo</div>
@@ -139,10 +141,13 @@
     return m;
   }
   AG.cerrarModal = () => {const v = $("#ag-modal"); if (v) v.remove();};
-  AG.verTerminos = async () => {
-    let md; try {md = await (await _fetch("/ag/terminos", {cache: "no-store"})).text();} catch (e) {md = "# Términos\n\nNo pude cargar TERMINOS.md";}
-    modal(`<div class="ag-cab"><b>Términos de uso</b><a class="ag-cerrar" onclick="AG.cerrarModal()">✕</a></div><div class="ag-md">${mdMin(md)}</div><div class="ag-firma">© AG Creations · todas las apps pertenecen a AG Creations (Alejandro Gómez Cabrera)</div>`);
-  };
+  async function verDocumento(ruta, titulo, fichero) {
+    let md; try {md = await (await _fetch(ruta, {cache: "no-store"})).text();} catch (e) {md = `# ${titulo}\n\nNo pude cargar ${fichero}`;}
+    modal(`<div class="ag-cab"><b>${esc(titulo)}</b><a class="ag-cerrar" onclick="AG.cerrarModal()">✕</a></div><div class="ag-md">${mdMin(md)}</div><div class="ag-firma">© AG Creations · todas las apps pertenecen a AG Creations (Alejandro Gómez Cabrera)</div>`);
+  }
+  AG.verTerminos = () => verDocumento("/ag/terminos", "Términos de uso", "TERMINOS.md");
+  AG.verPrivacidad = () => verDocumento("/ag/privacidad", "Política de privacidad", "PRIVACIDAD.md");
+  AG.verLicencia = () => verDocumento("/ag/licencia", "Licencia de uso", "LICENCIA.md");
   AG.cambiarContrasena = () => {
     const m = modal(`<div class="ag-cab"><b>Cambiar contraseña</b><a class="ag-cerrar" onclick="AG.cerrarModal()">✕</a></div>
       <form id="ag-pw"><label>Contraseña actual</label><input type="password" name="actual" required><label>Contraseña nueva (mínimo 8)</label><input type="password" name="nueva" required minlength="8"><label>Repite la nueva</label><input type="password" name="nueva2" required minlength="8">
@@ -168,9 +173,10 @@
         const d = await r.json();
         try {AG.app = await (await _fetch("/ag/version", {cache: "no-store"})).json();} catch (e) {}
         if (d.terminos_pendientes) {
-          let md; try {md = await (await _fetch("/ag/terminos", {cache: "no-store"})).text();} catch (e) {md = "";}
-          const m = modal(`<div class="ag-cab"><b>Los términos de ${esc((AG.app || {}).nombre || "esta app")} han cambiado</b></div><div class="ag-md" style="max-height:55vh;overflow:auto">${mdMin(md)}</div>
-            <button class="ag-boton" id="ag-ok">Los he leído y los acepto</button> <button class="ag-boton sec" onclick="AG.salir()">Salir</button>`);
+          let md, pv; try {md = await (await _fetch("/ag/terminos", {cache: "no-store"})).text();} catch (e) {md = "";}
+          try {pv = await (await _fetch("/ag/privacidad", {cache: "no-store"})).text();} catch (e) {pv = "";}
+          const m = modal(`<div class="ag-cab"><b>Los términos o la política de privacidad de ${esc((AG.app || {}).nombre || "esta app")} han cambiado</b></div><div class="ag-md" style="max-height:55vh;overflow:auto">${mdMin(md)}<hr>${mdMin(pv)}</div>
+            <button class="ag-boton" id="ag-ok">He leído y acepto los términos y la política de privacidad, y soy mayor de edad</button> <button class="ag-boton sec" onclick="AG.salir()">Salir</button>`);
           m.onclick = null;
           m.querySelector("#ag-ok").onclick = async () => {await AG.post("/ag/auth/aceptar"); m.remove(); entrar(d.cuenta);};
           return;

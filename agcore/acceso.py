@@ -6,7 +6,7 @@ Cada panel (un BaseHTTPRequestHandler) crea una Guardia y la llama en cuatro sit
 
     # al responder cualquier cosa:      G.cabeceras(self)       cabeceras de seguridad (CSP, nosniff…)
     # al principio de do_GET/do_POST:   if not G.host_ok(self): return       (DNS rebinding)
-    #                                   if G.get(self, ruta): return          rutas /ag/*
+    #                                   if G.get(self, ruta): return          rutas /ag/* (acceso, términos, privacidad, licencia…)
     # en do_POST además:                if not G.post_ok(self): return        (cabecera X-AG + Origin: CSRF)
     #                                   if G.post(self, ruta): return         /ag/auth/*
     # en las rutas con datos:           cuenta = G.exigir(self); if not cuenta: return   (401)
@@ -22,7 +22,7 @@ import json
 import time
 from pathlib import Path
 
-from . import EMPRESA, VERSION, app_del_catalogo, catalogo, cuentas
+from . import EMPRESA, RAIZ, VERSION, app_del_catalogo, catalogo, cuentas
 
 WEB = Path(__file__).resolve().parent / "web"
 CSP = ("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "
@@ -30,29 +30,48 @@ CSP = ("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 
        "worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'")
 MAX_CUERPO = 64 * 1024
 TIPOS = {".js": "application/javascript; charset=utf-8", ".css": "text/css; charset=utf-8"}
+# Lo único del catálogo que sale por /ag/version y /ag/cuentas (SIN sesión): nada de carpetas, servicios,
+# instaladores ni repositorios privados de catalogo.local.json. Es lo que usan acceso.js (menú y «Acerca de»)
+# y tienda._version_viva (solo "version" del nivel superior).
+CAMPOS_CATALOGO = ("id", "nombre", "icono", "puerto", "version", "descripcion")
 
 
 class Guardia:
     def __init__(self, app: str, puerto: int, base: Path, terminos: str = "TERMINOS.md"):
         self.app, self.puerto, self.base = app, puerto, Path(base)
         self.terminos = self.base / terminos
+        self.licencia = RAIZ / "LICENCIA.md"
         self.hosts = {f"localhost:{puerto}", f"127.0.0.1:{puerto}", f"[::1]:{puerto}"}
         self.origenes = {f"http://{h}" for h in self.hosts}
         self.cookie = "ag_" + app.replace("-", "_")
 
     # ------------------------------------------------------------ info
+    @property
+    def privacidad(self) -> Path:
+        """PRIVACIDAD.md de la app si tiene una propia; si no, la común de ~/ag-creations."""
+        propia = self.base / "PRIVACIDAD.md"
+        return propia if propia.exists() else RAIZ / "PRIVACIDAD.md"
+
     def terminos_version(self) -> str:
-        """Cambia sola cuando cambia TERMINOS.md: la app vuelve a pedir aceptarlos."""
+        """Cambia sola cuando cambia TERMINOS.md o PRIVACIDAD.md: la app vuelve a pedir aceptarlos.
+
+        Es el sha256 de los dos ficheros seguidos (si no hay PRIVACIDAD.md, solo de TERMINOS.md)."""
         try:
-            return hashlib.sha256(self.terminos.read_bytes()).hexdigest()[:12]
+            h = hashlib.sha256(self.terminos.read_bytes())
         except OSError:
             return "sin-terminos"
+        try:
+            h.update(self.privacidad.read_bytes())
+        except OSError:
+            pass
+        return h.hexdigest()[:12]
 
     def info(self) -> dict:
         a = app_del_catalogo(self.app)
         return {"app": self.app, "nombre": a.get("nombre", self.app), "icono": a.get("icono", "🧩"),
                 "version": a.get("version") or "?", "empresa": EMPRESA, "agcore": VERSION,
-                "terminos": self.terminos_version(), "catalogo": catalogo()}
+                "terminos": self.terminos_version(),
+                "catalogo": [{k: x[k] for k in CAMPOS_CATALOGO if k in x} for x in catalogo()]}
 
     # ------------------------------------------------------------ respuesta
     def cabeceras(self, h) -> None:
@@ -150,11 +169,13 @@ class Guardia:
             self._json(h, 200, {"cuentas": cuentas.listar(), "app": self.info()})
         elif ruta == "/ag/version":
             self._json(h, 200, self.info())
-        elif ruta == "/ag/terminos":
+        elif ruta in ("/ag/terminos", "/ag/privacidad", "/ag/licencia"):
+            f, titulo = {"/ag/terminos": (self.terminos, "Términos"), "/ag/privacidad": (self.privacidad, "Política de privacidad"),
+                         "/ag/licencia": (self.licencia, "Licencia")}[ruta]
             try:
-                cuerpo = self.terminos.read_bytes()
+                cuerpo = f.read_bytes()
             except OSError:
-                cuerpo = f"# Términos de {self.app}\n\n(esta app aún no tiene TERMINOS.md)".encode()
+                cuerpo = f"# {titulo} de {self.app}\n\n(esta app aún no tiene {f.name})".encode()
             self._responder(h, 200, cuerpo, "text/markdown; charset=utf-8")
         elif ruta in ("/ag/acceso.js", "/ag/acceso.css"):
             f = WEB / ruta[4:]

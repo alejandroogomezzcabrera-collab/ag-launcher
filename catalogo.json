@@ -1,77 +1,113 @@
 {
  "empresa": "AG Creations",
  "propietario": "Alejandro Gómez Cabrera",
+ "nota": "Catálogo PÚBLICO: nada de rutas ni secretos. Las carpetas y servicios reales de cada ordenador van en catalogo.local.json (gitignorado). Las apps con \"publica\": false no se enseñan en modo amigo.",
  "apps": [
   {
    "id": "ag-launcher",
    "nombre": "AG Launcher",
    "icono": "🏛",
-   "carpeta": "~/ag-creations/launcher",
    "puerto": 8282,
-   "descripcion": "la tienda del imperio: instala, actualiza y abre todas las apps",
-   "launchd": "com.ag.launcher-panel",
-   "servicios": [
+   "descripcion": "la tienda de AG Creations: instala, actualiza y abre las apps",
+   "publica": true,
+   "privado": false,
+   "repo": "https://github.com/alejandroogomezzcabrera-collab/ag-launcher.git",
+   "servicios_mac": [
     "com.ag.launcher-panel"
    ],
-   "instalador": "instalar.sh"
-  },
-  {
-   "id": "shorts-factory",
-   "nombre": "Shorts Factory",
-   "icono": "🎬",
-   "carpeta": "~/shorts-factory-v2",
-   "puerto": 8585,
-   "descripcion": "fábrica autónoma de shorts para YouTube",
-   "launchd": "com.ag.shorts-panel",
-   "servicios": [
-    "com.ag.shorts-panel",
-    "com.ag.shorts-factory"
+   "servicios_windows": [
+    "AG Creations\\com.ag.launcher-panel",
+    "AG Creations\\com.ag.launcher-vigilante"
    ],
-   "instalador": "scripts/instalar_launchd.sh"
-  },
-  {
-   "id": "llm-lab",
-   "nombre": "LLM Lab",
-   "icono": "🧠",
-   "carpeta": "~/llm-lab",
-   "puerto": 8686,
-   "descripcion": "un GPT desde cero, por dentro, con curso interactivo",
-   "launchd": "com.ag.llm-panel",
-   "servicios": [
-    "com.ag.llm-panel"
-   ],
-   "instalador": "scripts_instalar.sh"
-  },
-  {
-   "id": "second-brain",
-   "nombre": "Second Brain AI",
-   "icono": "🌌",
-   "carpeta": "~/second-brain",
-   "puerto": 8787,
-   "descripcion": "la memoria de largo plazo de Claude, en 3D",
-   "launchd": "com.ag.brain-panel",
-   "servicios": [
-    "com.ag.brain-panel",
-    "com.ag.brain-indexar"
-   ],
-   "instalador": "scripts_instalar.sh"
+   "panel_mac": "com.ag.launcher-panel",
+   "panel_windows": "AG Creations\\com.ag.launcher-panel",
+   "instalador_mac": "launcher/instalar.sh",
+   "instalador_windows": "windows/instalar.bat",
+   "venv": ".venv",
+   "puente": false,
+   "app": "launcher/app",
+   "app_nombre": "AG Launcher",
+   "firmada": true,
+   "version": "1.2.0"
   },
   {
    "id": "bot-lab",
    "nombre": "Bot Lab",
    "icono": "🤖",
-   "carpeta": "~/accc-projects/paper-trading-bot",
    "puerto": 8484,
-   "descripcion": "laboratorio de trading con dinero ficticio; se reparte a amigos",
-   "launchd": "com.ag.paper-panel",
-   "version": "3.16.1",
-   "nucleo": "propio",
-   "servicios": [
-    "com.ag.paper-panel",
-    "com.ag.paper-trading-bot",
-    "com.ag.paper-vigilante"
+   "descripcion": "laboratorio de trading con dinero ficticio: una flota de bots que evoluciona sola y comparte sus prodigios",
+   "publica": true,
+   "privado": true,
+   "repo": "https://github.com/alejandroogomezzcabrera-collab/bot_lab.git",
+   "servicios_mac": [
+    "com.botlab.panel",
+    "com.botlab.pasada",
+    "com.botlab.vigilante"
    ],
-   "repo": "https://github.com/alejandroogomezzcabrera-collab/bot_lab.git"
+   "servicios_windows": [
+    "BotLab panel",
+    "BotLab pasada",
+    "BotLab vigilante",
+    "BotLab actualizar"
+   ],
+   "panel_mac": "com.botlab.panel",
+   "panel_windows": "BotLab panel",
+   "instalador_mac": "instalar_mac.sh",
+   "venv": "venv",
+   "puente": true,
+   "receta": "bot-lab",
+   "nucleo": "propio",
+   "app": "app",
+   "app_nombre": "Bot Lab",
+   "version": "3.16.4",
+   "requisitos": "Python 3.11 o más nuevo, git y unas claves PAPER de Alpaca (dinero ficticio)"
+  },
+  {
+   "id": "shorts-factory",
+   "nombre": "Shorts Factory",
+   "icono": "🎬",
+   "puerto": 8585,
+   "descripcion": "fábrica autónoma de shorts para YouTube",
+   "publica": false,
+   "servicios_mac": [
+    "com.ag.shorts-panel",
+    "com.ag.shorts-factory"
+   ],
+   "panel_mac": "com.ag.shorts-panel",
+   "instalador_mac": "scripts/instalar_launchd.sh",
+   "venv": ".venv",
+   "app": "app"
+  },
+  {
+   "id": "llm-lab",
+   "nombre": "LLM Lab",
+   "icono": "🧠",
+   "puerto": 8686,
+   "descripcion": "un GPT desde cero, por dentro, con curso interactivo",
+   "publica": false,
+   "servicios_mac": [
+    "com.ag.llm-panel"
+   ],
+   "panel_mac": "com.ag.llm-panel",
+   "instalador_mac": "scripts_instalar.sh",
+   "venv": ".venv",
+   "app": "app"
+  },
+  {
+   "id": "second-brain",
+   "nombre": "Second Brain AI",
+   "icono": "🌌",
+   "puerto": 8787,
+   "descripcion": "la memoria de largo plazo de Claude, en 3D",
+   "publica": false,
+   "servicios_mac": [
+    "com.ag.brain-panel",
+    "com.ag.brain-indexar"
+   ],
+   "panel_mac": "com.ag.brain-panel",
+   "instalador_mac": "scripts_instalar.sh",
+   "venv": ".venv",
+   "app": "app"
   }
  ]
 }

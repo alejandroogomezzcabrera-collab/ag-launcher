@@ -1,0 +1,3 @@
+# AG Launcher: solo hace falta esto para INSTALAR actualizaciones firmadas del propio launcher.
+# Sin cryptography el launcher funciona igual (instala y abre apps) pero no se actualiza a sí mismo y avisa.
+cryptography>=42

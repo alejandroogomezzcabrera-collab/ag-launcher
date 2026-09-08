@@ -1,4 +1,12 @@
+secrets/
+catalogo.local.json
+logs/
+dist/
 __pycache__/
-.pytest_cache/
 *.pyc
+.venv/
+venv/
+app/node_modules/
+launcher/app/node_modules/
+.pytest_cache/
 .DS_Store

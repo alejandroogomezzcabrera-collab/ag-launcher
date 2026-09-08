@@ -1,0 +1,5 @@
+{
+ "propietario_sha256": "4e93e98547244ecd77c55b35f9c763d86e33f119e3876455c0b88899fed2507b",
+ "propietario_ed25519": "85551a18dec737a2b7ae0f8662c9b596668136d8499c1734a19d5313cb0f8993",
+ "nota": "Solo el propietario (quien tiene secrets/propietario.key) firma versiones. El launcher solo instala versiones cuya firma verifica con propietario_ed25519."
+}

@@ -23,7 +23,7 @@ from datetime import datetime
 
 from pathlib import Path
 
-from . import carpeta_datos, catalogo
+from . import carpeta_datos, carpeta_de, catalogo
 
 SCRYPT = {"n": 2 ** 14, "r": 8, "p": 1, "dklen": 32}
 MIN_CONTRASENA = 8
@@ -90,16 +90,17 @@ def _publica(c: dict) -> dict:
 
 # ----------------------------------------------------------------- cuentas
 def _importar_externas(cuentas: list[dict]) -> bool:
-    """Las apps con cuentas propias (Bot Lab, que se reparte a amigos) guardan el mismo formato
-    (scrypt + sal) en su carpeta: se copian aquí para que la cuenta sirva en todas las apps."""
+    """Las apps con núcleo propio ("nucleo": "propio" en el catálogo: Bot Lab, que lleva su copia de esta
+    lógica) guardaban antes cuentas.json en su carpeta con este mismo formato (scrypt + sal): si aún
+    existe, se copia aquí para que la cuenta sirva en todas las apps."""
     cambiado = False
     if os.environ.get("AG_SIN_EXTERNAS"):          # tests
         return False
     for a in catalogo():
-        if a.get("cuentas") != "propias":
+        if a.get("nucleo") != "propio":
             continue
         try:
-            externas = json.loads((Path(a["carpeta"]).expanduser() / "cuentas.json").read_text(encoding="utf-8"))
+            externas = json.loads((carpeta_de(a) / "cuentas.json").read_text(encoding="utf-8"))
         except (OSError, ValueError):
             continue
         for c in externas if isinstance(externas, list) else []:

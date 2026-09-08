@@ -1,0 +1,5 @@
+launcher/logs export-ignore
+logs export-ignore
+dist export-ignore
+secrets export-ignore
+catalogo.local.json export-ignore

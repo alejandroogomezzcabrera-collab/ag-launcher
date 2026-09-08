@@ -125,6 +125,13 @@ def test_guardia_http(servidor):
     assert pedir(url + "/datos", cookie=cookie)[0] == 200
     assert json.loads(pedir(url + "/ag/cuentas")[1])["cuentas"][0]["id"] == "ana-lopez"
     assert json.loads(pedir(url + "/ag/version")[1])["empresa"] == "AG Creations"
+    # el catálogo que sale sin sesión no lleva rutas ni servicios (catalogo.local.json es privado)
+    cat = json.loads(pedir(url + "/ag/version")[1])["catalogo"]
+    assert cat and all(set(x) <= {"id", "nombre", "icono", "puerto", "version", "descripcion"} for x in cat)
+    assert json.loads(pedir(url + "/ag/cuentas")[1])["app"]["catalogo"] == cat
+    # documentos: términos de la app, privacidad (común de ~/ag-creations si la app no tiene una propia) y licencia
+    assert b"Pertenece a AG Creations" in pedir(url + "/ag/terminos")[1]
+    assert b"Alejandro" in pedir(url + "/ag/privacidad")[1] and b"Licencia" in pedir(url + "/ag/licencia")[1]
     # entrar de nuevo con la misma cuenta (bienvenido de nuevo)
     st, cuerpo, _ = pedir(url + "/ag/auth/entrar", "POST", {"id": "ana-lopez", "contrasena": "secreta123"}, {"X-AG": "1"})
     assert st == 200
@@ -134,6 +141,12 @@ def test_guardia_http(servidor):
     assert st == 428 and json.loads(cuerpo)["error"] == "terminos"
     st, _, _ = pedir(url + "/ag/auth/entrar", "POST", {"id": "ana-lopez", "contrasena": "secreta123", "acepta_terminos": True}, {"X-AG": "1"})
     assert st == 200
+    assert json.loads(pedir(url + "/ag/yo", cookie=cookie)[1])["terminos_pendientes"] is False
+    # si la app trae su propia PRIVACIDAD.md, entra en el hash: cambiarla también obliga a aceptar de nuevo
+    (Path(os.environ["AG_DATOS"]).parent / "app" / "PRIVACIDAD.md").write_text("# Privacidad de prueba\n", encoding="utf-8")
+    assert json.loads(pedir(url + "/ag/yo", cookie=cookie)[1])["terminos_pendientes"] is True
+    assert pedir(url + "/ag/privacidad")[1].startswith(b"# Privacidad de prueba")
+    assert pedir(url + "/ag/auth/aceptar", "POST", {}, {"X-AG": "1"}, cookie=cookie)[0] == 200
     assert json.loads(pedir(url + "/ag/yo", cookie=cookie)[1])["terminos_pendientes"] is False
     # salir
     st, _, cab = pedir(url + "/ag/auth/salir", "POST", {}, {"X-AG": "1"}, cookie=cookie)

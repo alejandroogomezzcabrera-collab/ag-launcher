@@ -52,3 +52,20 @@ body{margin:0;background:var(--bg);color:var(--tx);font:13.5px/1.45 -apple-syste
 .mono{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--sub)}
 .caja{background:var(--panel);border:1px solid var(--borde);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sombra)}
 .vacio{color:var(--sub);padding:30px;text-align:center}
+/* ── invitación, git, puente, formulario de Bot Lab ─────────────────────── */
+.tarjeta .portada .privado{position:absolute;left:12px;top:10px;font:600 10.5px ui-monospace,Menlo,monospace;color:rgba(255,255,255,.7);background:rgba(0,0,0,.35);padding:3px 8px;border-radius:999px}
+.puente{background:var(--bg2);border:1px solid var(--borde);border-radius:10px;padding:7px 10px;line-height:1.5}
+.aviso-git,.aviso-inv{margin-bottom:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-color:rgba(255,200,87,.35)}
+.aviso-inv{border-color:rgba(110,168,254,.4)}
+.caja .sub,.dialogo .sub{color:var(--sub);font-size:12.5px;margin:6px 0 10px}
+.caja label,.dialogo label{display:block;font-size:12px;color:var(--sub);font-weight:700;margin:10px 0 6px}
+.caja input,.caja textarea,.dialogo input:not([type=checkbox]),.dialogo textarea{display:block;width:100%;margin-top:5px;background:var(--bg2);border:1px solid var(--borde2);border-radius:10px;color:var(--tx);font:13px/1.4 ui-monospace,Menlo,monospace;padding:9px 11px;outline:none}
+.caja input:focus,.caja textarea:focus,.dialogo input:focus,.dialogo textarea:focus{border-color:var(--azul)}
+.dialogo label.check{display:flex;gap:10px;align-items:flex-start;font-weight:500;color:var(--tx);font-size:12.5px;line-height:1.45}
+.dialogo label.check input{margin-top:3px;flex:none}
+.dialogo .fila,.caja .fila{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
+#modal{position:fixed;inset:0;background:rgba(3,5,10,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:70;animation:fadeUp .15s ease}
+#modal.oculta{display:none}
+.dialogo{background:var(--panel);border:1px solid var(--borde2);border-radius:var(--r);padding:22px 24px;width:min(560px,92vw);max-height:90vh;overflow:auto;box-shadow:var(--sombra)}
+.dialogo h2{margin:0 0 6px;font-size:19px}
+.dialogo a[href],.caja a[href]{color:var(--azul)}

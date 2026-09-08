@@ -1,0 +1,27 @@
+AG LAUNCHER — la tienda de AG Creations
+========================================
+
+Con esto instalas en tu ordenador las apps de AG Creations (por ahora Bot Lab, el laboratorio de
+trading con dinero ficticio) y se mantienen al dia solas. Todo corre en tu ordenador: no hay
+servidores ni cuentas en internet.
+
+NECESITAS
+  - Python 3.11 o mas nuevo   (Windows: python.org, marcando "Add python.exe to PATH";
+                                Mac: ya viene, o xcode-select --install)
+  - Git                       (Windows: git-scm.com, todo por defecto, o el boton "Instalar Git" del launcher;
+                                Mac: xcode-select --install)
+  - el CODIGO DE INVITACION que te ha pasado Alejandro (para las apps privadas)
+  - para Bot Lab: una cuenta en app.alpaca.markets y unas API Keys de PAPER TRADING (dinero ficticio)
+
+WINDOWS
+  1. Descomprime esta carpeta donde quieras (por ejemplo C:\AG Launcher).
+  2. Doble clic en windows\instalar.bat (una vez).
+  3. Se abre http://localhost:8282: crea tu cuenta (es local), pega tu invitacion e instala Bot Lab.
+  Para abrir la app despues: el acceso directo "AG Launcher" o "AG Launcher.bat".
+
+MAC
+  1. Descomprime esta carpeta donde quieras (por ejemplo ~/AG Launcher).
+  2. Doble clic en "AG Launcher.command" (si el Mac protesta: clic derecho → Abrir, una vez).
+  3. Se abre http://localhost:8282: crea tu cuenta, pega tu invitacion e instala Bot Lab.
+
+Mas detalles: README.md. Desinstalar y donde estan tus datos: README.md, seccion "Desinstalar".
