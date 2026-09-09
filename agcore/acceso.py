@@ -2,7 +2,7 @@
 
 Cada panel (un BaseHTTPRequestHandler) crea una Guardia y la llama en cuatro sitios:
 
-    G = Guardia("llm-lab", PUERTO, BASE)
+    G = Guardia("mi-app", PUERTO, BASE)
 
     # al responder cualquier cosa:      G.cabeceras(self)       cabeceras de seguridad (CSP, nosniff…)
     # al principio de do_GET/do_POST:   if not G.host_ok(self): return       (DNS rebinding)

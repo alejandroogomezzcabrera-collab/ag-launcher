@@ -5,7 +5,11 @@
 "use strict";
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
-const COLORES = {"ag-launcher": ["#1d2b4f", "#2c1a4f"], "shorts-factory": ["#4a1d2f", "#1d2b4f"], "llm-lab": ["#1d3a4f", "#2f1d4f"], "second-brain": ["#1a1f4f", "#0f3a3f"], "bot-lab": ["#1f3f2a", "#1d2b4f"]};
+const COLORES = {"ag-launcher": ["#1d2b4f", "#2c1a4f"], "bot-lab": ["#1f3f2a", "#1d2b4f"]};
+// Cualquier otra app (las del catálogo local del propietario) coge su pareja de colores de su
+// propio id: así el catálogo público no nombra apps que no reparto.
+const PALETA = [["#4a1d2f", "#1d2b4f"], ["#1d3a4f", "#2f1d4f"], ["#1a1f4f", "#0f3a3f"], ["#3f2a1d", "#1d2b4f"], ["#2a1d4f", "#1d3f3a"]];
+const colorDe = (id) => COLORES[id] || PALETA[[...String(id)].reduce((n, c) => n + c.charCodeAt(0), 0) % PALETA.length];
 let D = null, UI = {pagina: localStorage.getItem("agl.pagina") || "biblioteca", menu: null, tarea: null, ultimo: ""};
 const apps = () => (D && D.apps) || [];
 const WIN = () => D && D.so === "windows";
@@ -94,7 +98,7 @@ function puenteHtml(a) {
   return `<div class="puente mono" title="lo que dice puente_git.py --estado">${f.join(" · ") || "puente sin datos aún"}</div>`;
 }
 function tarjeta(a) {
-  const [c1, c2] = COLORES[a.id] || ["#1b2a4a", "#2a1b4a"];
+  const [c1, c2] = colorDe(a.id);
   return `<div class="tarjeta" style="--c1:${c1};--c2:${c2}"><div class="portada">${esc(a.icono)}<span class="ver">${a.version ? "v" + esc(a.version) : "—"}</span>${a.puerto ? `<span class="puerto">localhost:${a.puerto}</span>` : ""}${a.privado ? `<span class="privado">🔒 con invitación</span>` : ""}</div>
     <div class="cuerpo"><h3>${esc(a.nombre)}</h3><div class="desc">${esc(a.descripcion)}${a.requisitos && !a.existe ? `<div class="mono" style="margin-top:4px">necesita: ${esc(a.requisitos)}</div>` : ""}</div>${chips(a)}${a.puente && a.existe ? puenteHtml(a) : ""}<div class="acciones">${botones(a)}</div></div></div>`;
 }

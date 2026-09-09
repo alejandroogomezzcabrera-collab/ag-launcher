@@ -336,6 +336,7 @@ def test_un_amigo_solo_puede_instalar_bot_lab(monkeypatch):
     visibles = {a["id"] for a in tienda.apps_visibles()}
     assert visibles <= REPARTIBLES, f"un amigo vería {visibles - REPARTIBLES}"
     assert {a["id"] for a in acceso.catalogo_visible()} <= REPARTIBLES
-    for oculta in ("shorts-factory", "llm-lab", "second-brain"):
+    ocultas = [a["id"] for a in tienda.catalogo() if a["id"] not in REPARTIBLES]
+    for oculta in ocultas:
         assert tienda.app(oculta) is None, f"{oculta} se podría instalar desde el launcher de un amigo"
     assert tienda.app("bot-lab") is not None

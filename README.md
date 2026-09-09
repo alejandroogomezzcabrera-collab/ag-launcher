@@ -139,7 +139,7 @@ python3 agc.py invitar "Nombre"                  # código de invitación (secre
 python3 agc.py subir <app> patch|minor|major -m "…"   # otras apps
 python3 agc.py nuevo mi-app --nombre "Mi App" --icono 🎯 --puerto 8888
 python3 agc.py comprobar
-~/llm-lab/.venv/bin/python -m pytest -q tests    # o .venv/bin/python
+python3 -m pytest -q tests                       # con cualquier python que tenga pytest
 ```
 
 Primera publicación: `git remote add origin https://github.com/alejandroogomezzcabrera-collab/ag-launcher.git`

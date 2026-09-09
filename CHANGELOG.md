@@ -1,5 +1,9 @@
 # Cambios de agcore
 
+## 1.3.4 — 2026-09-09
+
+- el ZIP de un amigo ya no nombra en ningun sitio las apps que no reparto (colores del launcher, ejemplo de acceso.py, README y tests)
+
 ## 1.3.3 — 2026-09-09
 
 - el catalogo publico solo lleva AG Launcher y Bot Lab: las apps que no reparto viven enteras en catalogo.local.json, asi ni el repositorio ni el ZIP de un amigo dicen que existen; tests que lo vigilan
