@@ -22,7 +22,7 @@ import json
 import time
 from pathlib import Path
 
-from . import EMPRESA, RAIZ, VERSION, app_del_catalogo, catalogo, cuentas, remoto
+from . import EMPRESA, RAIZ, VERSION, app_del_catalogo, catalogo, cuentas, firmas, remoto
 
 WEB = Path(__file__).resolve().parent / "web"
 CSP = ("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "
@@ -34,6 +34,16 @@ TIPOS = {".js": "application/javascript; charset=utf-8", ".css": "text/css; char
 # instaladores ni repositorios privados de catalogo.local.json. Es lo que usan acceso.js (menú y «Acerca de»)
 # y tienda._version_viva (solo "version" del nivel superior).
 CAMPOS_CATALOGO = ("id", "nombre", "icono", "puerto", "version", "descripcion")
+
+
+def catalogo_visible() -> list[dict]:
+    """El catálogo que puede ver quien mira esta app: entero para el propietario (el que tiene la clave
+    de firmar), solo las apps repartibles (publica) para un amigo. Sin esto, la copia de un amigo
+    enseñaría por /ag/version los nombres, puertos y descripciones de las apps que no reparto."""
+    todas = catalogo()
+    if firmas.ruta_clave(RAIZ).exists():
+        return todas
+    return [a for a in todas if a.get("publica")]
 
 
 class Guardia:
@@ -72,7 +82,7 @@ class Guardia:
         return {"app": self.app, "nombre": a.get("nombre", self.app), "icono": a.get("icono", "🧩"),
                 "version": a.get("version") or "?", "empresa": EMPRESA, "agcore": VERSION,
                 "terminos": self.terminos_version(),
-                "catalogo": [{k: x[k] for k in CAMPOS_CATALOGO if k in x} for x in catalogo()]}
+                "catalogo": [{k: x[k] for k in CAMPOS_CATALOGO if k in x} for x in catalogo_visible()]}
 
     def manifiesto(self) -> dict:
         """Para poder «instalar» la app en un iPad, un móvil o el escritorio (Añadir a pantalla de

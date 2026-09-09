@@ -1,5 +1,9 @@
 # Cambios de agcore
 
+## 1.3.2 — 2026-09-09
+
+- la copia de un amigo ya no ensena por /ag/version las apps que no reparto (solo las publicas); el catalogo trae Bot Lab 3.21.1 (flota de 32 bots)
+
 ## 1.3.1 — 2026-09-08
 
 - iPad por la wifi sin instalar nada: dirección por el nombre del ordenador (.local), estable aunque cambie la IP; IPAD.md empieza por esa opción
