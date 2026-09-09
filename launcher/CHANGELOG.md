@@ -1,5 +1,9 @@
 # Cambios de AG Launcher
 
+## 1.3.6 — 2026-09-09
+
+- cuando el panel no arranca ya se puede saber por que: windows/diagnostico.bat (y diagnostico.py) escribe un informe, el instalador de Windows lo saca solo si el panel no responde, y launcher_panel.py apunta en logs/panel.log cualquier fallo al importar (con pythonw no hay consola y hasta ahora se moria sin dejar rastro)
+
 ## 1.3.5 — 2026-09-09
 
 - los tests tampoco nombran ya las apps que no reparto: el mundo de pruebas usa una app inventada en el catalogo local

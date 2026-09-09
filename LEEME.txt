@@ -24,4 +24,10 @@ MAC
   2. Doble clic en "AG Launcher.command" (si el Mac protesta: clic derecho → Abrir, una vez).
   3. Se abre http://localhost:8282: crea tu cuenta, pega tu invitacion e instala Bot Lab.
 
+SI NO ABRE ("localhost rechazo la conexion")
+  Doble clic en windows\diagnostico.bat (Windows) o, en Mac, ejecuta en la Terminal:
+      python3 "<carpeta del launcher>/windows/diagnostico.py"
+  No cambia nada: escribe diagnostico.txt con lo que falla. Mandaselo a Alejandro.
+  No lleva contrasenas, ni claves de Alpaca, ni el codigo de invitacion.
+
 Mas detalles: README.md. Desinstalar y donde estan tus datos: README.md, seccion "Desinstalar".

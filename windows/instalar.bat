@@ -60,7 +60,14 @@ echo Tareas creadas: panel (al iniciar sesion) y vigilante (cada minuto, sin ven
 rem 4) Arrancar ahora y esperar a que responda
 call "%RAIZ%\windows\vigilante.bat"
 ".venv\Scripts\python.exe" -c "import socket,time,sys;t=time.time()+20;f=lambda:socket.create_connection(('127.0.0.1',8282),timeout=0.5).close();exec('while time.time()<t:\n try:\n  f();sys.exit(0)\n except OSError: time.sleep(0.5)\nsys.exit(1)')" 2>nul
-if errorlevel 1 echo (el panel aun no responde; mira launcher\logs\panel.log)
+if errorlevel 1 (
+  echo.
+  echo El panel NO responde en http://localhost:8282. Saco el diagnostico para ver por que:
+  ".venv\Scripts\python.exe" "%RAIZ%\windows\diagnostico.py"
+  echo Manda diagnostico.txt a Alejandro. No lleva contrasenas ni claves.
+  pause
+  exit /b 1
+)
 
 rem 5) Acceso directo en el Menu Inicio y el Escritorio (la raiz se pasa como argumento, nunca dentro del literal)
 ".venv\Scripts\python.exe" -c "import sys;sys.path.insert(0,sys.argv[1]);from agcore import so,app_del_catalogo,RAIZ;so.construir_acceso(app_del_catalogo('ag-launcher'),RAIZ)" "%RAIZ%"
