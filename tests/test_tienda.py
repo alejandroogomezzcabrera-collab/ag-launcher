@@ -156,7 +156,7 @@ def mundo(tmp_path, monkeypatch):
     (raiz / "catalogo.json").write_text((RAIZ / "catalogo.json").read_text(encoding="utf-8"), encoding="utf-8")
     # como en el Mac de Alejandro: las apps que NO reparte viven solo en el catálogo local (gitignorado)
     (raiz / "catalogo.local.json").write_text(json.dumps(
-        {"apps": [{"id": "llm-lab", "nombre": "LLM Lab", "puerto": 8686, "carpeta": str(tmp_path / "llm-lab")}]}), encoding="utf-8")
+        {"apps": [{"id": "app-solo-mia", "nombre": "App Solo Mía", "puerto": 8686, "carpeta": str(tmp_path / "app-solo-mia")}]}), encoding="utf-8")
     monkeypatch.setattr(agcore, "RAIZ", raiz)
     monkeypatch.setattr(tienda, "RAIZ", raiz)
     monkeypatch.setattr(firmas, "RAIZ", raiz)
@@ -177,13 +177,13 @@ def test_modo_amigo_solo_apps_publicas(mundo):
     t = mundo["tienda"]
     assert t.modo() == "amigo"
     ids = [a["id"] for a in t.apps_visibles()]
-    assert "bot-lab" in ids and "ag-launcher" in ids and "llm-lab" not in ids
+    assert "bot-lab" in ids and "ag-launcher" in ids and "app-solo-mia" not in ids
     e = {a["id"]: a for a in t.estado()}
     assert e["bot-lab"]["existe"] is False and e["bot-lab"]["privado"] is True and e["bot-lab"]["instalada"] is False
     assert e["ag-launcher"]["existe"] is True and e["ag-launcher"]["propia"] is True
     assert e["bot-lab"]["carpeta"].endswith("apps/bot-lab") or "apps" in e["bot-lab"]["carpeta"]
     (mundo["raiz"] / "secrets").mkdir(); (mundo["raiz"] / "secrets" / "propietario.key").write_text("clave\n")
-    assert t.modo() == "propietario" and "llm-lab" in [a["id"] for a in t.apps_visibles()]
+    assert t.modo() == "propietario" and "app-solo-mia" in [a["id"] for a in t.apps_visibles()]
 
 
 def test_instalar_bot_lab_pide_invitacion(mundo):

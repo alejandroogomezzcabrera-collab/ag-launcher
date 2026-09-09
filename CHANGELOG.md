@@ -1,5 +1,9 @@
 # Cambios de agcore
 
+## 1.3.5 — 2026-09-09
+
+- los tests tampoco nombran ya las apps que no reparto: el mundo de pruebas usa una app inventada en el catalogo local
+
 ## 1.3.4 — 2026-09-09
 
 - el ZIP de un amigo ya no nombra en ningun sitio las apps que no reparto (colores del launcher, ejemplo de acceso.py, README y tests)
