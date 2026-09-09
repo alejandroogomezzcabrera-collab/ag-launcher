@@ -1,5 +1,9 @@
 # Cambios de agcore
 
+## 1.3.15 — 2026-09-09
+
+- Catálogo Bot Lab 3.22.4: mejora del aprendizaje y validación más rápida
+
 ## 1.3.14 — 2026-09-09
 
 - Catálogo actualizado a Bot Lab 3.22.3: ampliación inmediata a 256 bots y corrección del reinicio en Windows
