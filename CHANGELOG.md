@@ -1,5 +1,9 @@
 # Cambios de agcore
 
+## 1.3.16 — 2026-09-09
+
+- Catálogo Bot Lab 3.22.5: adaptación contextual y aprendizaje correcto de cortos
+
 ## 1.3.15 — 2026-09-09
 
 - Catálogo Bot Lab 3.22.4: mejora del aprendizaje y validación más rápida
