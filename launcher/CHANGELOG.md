@@ -1,5 +1,9 @@
 # Cambios de AG Launcher
 
+## 1.3.11 — 2026-09-09
+
+- el catalogo apunta a Bot Lab 3.21.6
+
 ## 1.3.10 — 2026-09-09
 
 - el catalogo apunta a Bot Lab 3.21.5
