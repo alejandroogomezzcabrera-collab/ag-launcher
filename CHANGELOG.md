@@ -1,5 +1,9 @@
 # Cambios de agcore
 
+## 1.3.3 — 2026-09-09
+
+- el catalogo publico solo lleva AG Launcher y Bot Lab: las apps que no reparto viven enteras en catalogo.local.json, asi ni el repositorio ni el ZIP de un amigo dicen que existen; tests que lo vigilan
+
 ## 1.3.2 — 2026-09-09
 
 - la copia de un amigo ya no ensena por /ag/version las apps que no reparto (solo las publicas); el catalogo trae Bot Lab 3.21.1 (flota de 32 bots)

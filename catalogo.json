@@ -1,7 +1,7 @@
 {
  "empresa": "AG Creations",
  "propietario": "Alejandro Gómez Cabrera",
- "nota": "Catálogo PÚBLICO: nada de rutas ni secretos. Las carpetas y servicios reales de cada ordenador van en catalogo.local.json (gitignorado). Las apps con \"publica\": false no se enseñan en modo amigo.",
+ "nota": "Catálogo PÚBLICO: SOLO las apps que reparto (AG Launcher y Bot Lab). Las demás viven enteras en catalogo.local.json (gitignorado), así ni el repositorio ni el ZIP que descarga un amigo dicen que existen. Nada de rutas ni secretos aquí.",
  "apps": [
   {
    "id": "ag-launcher",
@@ -28,7 +28,7 @@
    "app": "launcher/app",
    "app_nombre": "AG Launcher",
    "firmada": true,
-   "version": "1.3.2"
+   "version": "1.3.3"
   },
   {
    "id": "bot-lab",
@@ -61,54 +61,6 @@
    "app_nombre": "Bot Lab",
    "version": "3.21.1",
    "requisitos": "Python 3.11 o más nuevo, git y unas claves PAPER de Alpaca (dinero ficticio)"
-  },
-  {
-   "id": "shorts-factory",
-   "nombre": "Shorts Factory",
-   "icono": "🎬",
-   "puerto": 8585,
-   "descripcion": "fábrica autónoma de shorts para YouTube",
-   "publica": false,
-   "servicios_mac": [
-    "com.ag.shorts-panel",
-    "com.ag.shorts-factory"
-   ],
-   "panel_mac": "com.ag.shorts-panel",
-   "instalador_mac": "scripts/instalar_launchd.sh",
-   "venv": ".venv",
-   "app": "app",
-   "version": "2.1.0"
-  },
-  {
-   "id": "llm-lab",
-   "nombre": "LLM Lab",
-   "icono": "🧠",
-   "puerto": 8686,
-   "descripcion": "un GPT desde cero, por dentro, con curso interactivo",
-   "publica": false,
-   "servicios_mac": [
-    "com.ag.llm-panel"
-   ],
-   "panel_mac": "com.ag.llm-panel",
-   "instalador_mac": "scripts_instalar.sh",
-   "venv": ".venv",
-   "app": "app"
-  },
-  {
-   "id": "second-brain",
-   "nombre": "Second Brain AI",
-   "icono": "🌌",
-   "puerto": 8787,
-   "descripcion": "la memoria de largo plazo de Claude, en 3D",
-   "publica": false,
-   "servicios_mac": [
-    "com.ag.brain-panel",
-    "com.ag.brain-indexar"
-   ],
-   "panel_mac": "com.ag.brain-panel",
-   "instalador_mac": "scripts_instalar.sh",
-   "venv": ".venv",
-   "app": "app"
   }
  ]
 }

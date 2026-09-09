@@ -154,6 +154,9 @@ def mundo(tmp_path, monkeypatch):
     raiz.mkdir()
     (raiz / "VERSION").write_text("1.1.0\n")
     (raiz / "catalogo.json").write_text((RAIZ / "catalogo.json").read_text(encoding="utf-8"), encoding="utf-8")
+    # como en el Mac de Alejandro: las apps que NO reparte viven solo en el catálogo local (gitignorado)
+    (raiz / "catalogo.local.json").write_text(json.dumps(
+        {"apps": [{"id": "llm-lab", "nombre": "LLM Lab", "puerto": 8686, "carpeta": str(tmp_path / "llm-lab")}]}), encoding="utf-8")
     monkeypatch.setattr(agcore, "RAIZ", raiz)
     monkeypatch.setattr(tienda, "RAIZ", raiz)
     monkeypatch.setattr(firmas, "RAIZ", raiz)
@@ -309,3 +312,30 @@ def test_desinstalar_y_registro(mundo):
     assert not so.servicios and "bot-lab" not in so.accesos
     assert (carpeta / ".env").exists()            # los datos se quedan
     assert t.abrir(t.app("bot-lab")).startswith("abriendo http://localhost:8484")
+
+
+# --------------------------------------------------------------------------- lo que ve un amigo
+REPARTIBLES = {"ag-launcher", "bot-lab"}
+
+
+def test_catalogo_publico_solo_lleva_lo_que_reparto():
+    """catalogo.json viaja en el repositorio público y en el ZIP: no puede nombrar las apps que no reparto."""
+    apps = json.loads((RAIZ / "catalogo.json").read_text(encoding="utf-8"))["apps"]
+    assert {a["id"] for a in apps} == REPARTIBLES
+    assert all(a.get("publica") for a in apps), "en el catálogo público toda app es repartible"
+
+
+def test_un_amigo_solo_puede_instalar_bot_lab(monkeypatch):
+    """Aunque el catálogo local del propietario tenga más apps, en modo amigo no existen:
+    ni salen en la biblioteca, ni /ag/version las nombra, ni se pueden instalar por su id."""
+    from agcore import acceso, tienda
+
+    monkeypatch.setattr(tienda, "modo", lambda: "amigo")
+    monkeypatch.setattr(acceso.firmas, "ruta_clave", lambda base=None: RAIZ / "no-existe.key")
+
+    visibles = {a["id"] for a in tienda.apps_visibles()}
+    assert visibles <= REPARTIBLES, f"un amigo vería {visibles - REPARTIBLES}"
+    assert {a["id"] for a in acceso.catalogo_visible()} <= REPARTIBLES
+    for oculta in ("shorts-factory", "llm-lab", "second-brain"):
+        assert tienda.app(oculta) is None, f"{oculta} se podría instalar desde el launcher de un amigo"
+    assert tienda.app("bot-lab") is not None
