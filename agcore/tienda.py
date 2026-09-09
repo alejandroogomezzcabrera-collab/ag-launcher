@@ -82,13 +82,23 @@ def _log_seguro(log):
 
 # ----------------------------------------------------------------- piezas de estado
 def _version_viva(puerto: int | None) -> str | None:
+    """La versión que el PROCESO está ejecutando ahora mismo (no la del disco).
+
+    Una app que lleva días arrancada sigue con el código que cargó: una actualización cambia el
+    disco pero no el intérprete. Comparando esto con la versión instalada, la biblioteca puede
+    avisar de «instalada 3.21.2, corriendo 3.20.5» en vez de darla por al día. Bot Lab responde en
+    /version (no usa agcore); las demás, en /ag/version."""
     if not puerto or not SO.vivo(puerto):
         return None
-    try:
-        with urllib.request.urlopen(f"http://127.0.0.1:{puerto}/ag/version", timeout=0.6) as r:
-            return json.loads(r.read()).get("version")
-    except Exception:
-        return None
+    for ruta in ("/ag/version", "/version"):
+        try:
+            with urllib.request.urlopen(f"http://127.0.0.1:{puerto}{ruta}", timeout=0.6) as r:
+                v = json.loads(r.read()).get("version")
+            if v:
+                return str(v)
+        except Exception:
+            continue
+    return None
 
 
 def _venv_de(a: dict, carpeta: Path) -> Path | None:

@@ -28,7 +28,7 @@
    "app": "launcher/app",
    "app_nombre": "AG Launcher",
    "firmada": true,
-   "version": "1.3.7"
+   "version": "1.3.8"
   },
   {
    "id": "bot-lab",
@@ -59,7 +59,7 @@
    "nucleo": "propio",
    "app": "app",
    "app_nombre": "Bot Lab",
-   "version": "3.21.2",
+   "version": "3.21.3",
    "requisitos": "Python 3.11 o más nuevo, git y unas claves PAPER de Alpaca (dinero ficticio)"
   }
  ]

@@ -1,5 +1,9 @@
 # Cambios de AG Launcher
 
+## 1.3.8 — 2026-09-09
+
+- la biblioteca avisa cuando una app corre una version distinta de la instalada (un panel arrancado hace dias sigue con su codigo); Bot Lab responde en /version
+
 ## 1.3.7 — 2026-09-09
 
 - el catalogo apunta a Bot Lab 3.21.2

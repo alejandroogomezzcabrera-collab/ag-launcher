@@ -42,6 +42,10 @@ function chips(a) {
   else if (a.instalada) c.push(["verde", "instalada"]);
   else c.push(["oro", "a medias"]);
   if (a.existe) c.push([a.vivo ? "verde" : "rojo", a.vivo ? "panel vivo" : "panel parado"]);
+  // Un panel que lleva días arrancado sigue con el código que cargó: la actualización cambia el
+  // disco, no el intérprete. Si lo que corre no es lo instalado, se dice (y «Reiniciar» lo cura).
+  if (a.vivo && a.version_viva && a.version && a.version_viva !== a.version)
+    c.push(["rojo", `corriendo v${a.version_viva}: reinicia el panel`]);
   const serv = Object.entries(a.servicios || {}); const ok = serv.filter(([, v]) => v).length;
   if (serv.length) c.push([ok === serv.length ? "azul" : "oro", `${ok}/${serv.length} ${t.servicios}`]);
   if (a.existe) c.push([a.app ? "azul" : "oro", a.app ? t.acceso : t.sinAcceso]);
