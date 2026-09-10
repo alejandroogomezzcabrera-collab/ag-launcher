@@ -102,23 +102,30 @@ def _instalar_bot_lab(a: dict, carpeta: Path, log, SO) -> bool:
         return _log_cmd(log, SO.sh("/bin/zsh", inst, cwd=carpeta, timeout=2400, utf8=True), "Bot Lab instalada en launchd (com.botlab.*)")
     if SO.ES_WIN:
         w = carpeta / "windows"
-        for f in ("pasada.bat", "vigilante.bat", "actualizar.bat", "panel.bat"):
-            if not (w / f).exists():
-                log(f"✗ falta windows\\{f} en la carpeta de Bot Lab")
-                return False
-        log("▸ creando las tareas programadas de Bot Lab…")
+        # Las tareas ejecutan pythonw.exe, no un .bat: pythonw es un programa de INTERFAZ y Windows
+        # no le da consola nunca. Con un .bat (aunque vaya envuelto en wscript) basta un descuido
+        # para que salte una ventana encima de lo que esté haciendo el usuario, y el vigilante
+        # corre CADA MINUTO. windows/tarea.py hace lo mismo que hacían los .bat.
+        entrada = w / "tarea.py"
+        if not entrada.exists():
+            log("✗ falta windows\\tarea.py en la carpeta de Bot Lab")
+            return False
+        pyw = venv / "Scripts" / "pythonw.exe"
+        if not pyw.exists():
+            pyw = SO.python_de(venv)
+        log("▸ creando las tareas programadas de Bot Lab (sin ventanas de consola)…")
         ok = True
-        for label, prog, cada, logon in (("BotLab pasada", w / "pasada.bat", 5, False), ("BotLab vigilante", w / "vigilante.bat", 1, False),
-                                          ("BotLab actualizar", w / "actualizar.bat", 10, False), ("BotLab panel", w / "panel.bat", None, True)):
-            r = SO.instalar_servicio(label, [prog], carpeta, cada_minutos=cada, al_iniciar_sesion=logon, keepalive=logon, log=log)
+        for label, que, cada, logon in (("BotLab pasada", "pasada", 5, False), ("BotLab vigilante", "vigilante", 1, False),
+                                        ("BotLab actualizar", "actualizar", 10, False), ("BotLab panel", "panel", None, True)):
+            r = SO.instalar_servicio(label, [pyw, entrada, que], carpeta, cada_minutos=cada, al_iniciar_sesion=logon, keepalive=logon, log=log)
             log(("✓ " if r else "✗ ") + label + (f" (cada {cada} min)" if cada else " (al iniciar sesión)"))
             ok = ok and r
         if not ok:
             return False
         log("▸ primera sincronización con el buzón (puente_git.py --sincronizar)…")
         _log_cmd(log, SO.sh(py, "puente_git.py", "--sincronizar", cwd=carpeta, timeout=900, utf8=True), "puente sincronizado")
-        log("▸ arrancando el panel (windows\\panel.bat)…")
-        SO.sh("cmd", "/c", w / "panel.bat", cwd=carpeta, timeout=60)
+        log("▸ arrancando el panel…")
+        SO.sh(pyw, entrada, "panel", "--sin-abrir", cwd=carpeta, timeout=120)
         return True
     log("✗ sistema no soportado para Bot Lab")
     return False

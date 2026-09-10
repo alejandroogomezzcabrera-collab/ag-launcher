@@ -1,5 +1,9 @@
 # Cambios de AG Launcher
 
+## 1.4.0 — 2026-09-10
+
+- las tareas de Windows de Bot Lab se registran con pythonw.exe windows/tarea.py, no con .bat: un .bat abre una consola cada vez que corre la tarea
+
 ## 1.3.21 — 2026-09-10
 
 - el catalogo apunta a Bot Lab 3.26.0

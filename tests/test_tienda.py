@@ -42,6 +42,7 @@ class SoFalso:
             (destino / "puente_git.py").write_text("print('{}')\n")
             (destino / "instalar_mac.sh").write_text("#!/bin/zsh\necho instalado\n")
             w = destino / "windows"; w.mkdir()
+            (w / "tarea.py").write_text("# entrada de las tareas de Windows (sin consola)\n")
             for f in ("pasada.bat", "vigilante.bat", "actualizar.bat", "panel.bat"):
                 (w / f).write_text("@echo off\n")
             return subprocess.CompletedProcess(a, 0, f"Cloning into '{destino.name}'…\nfrom {a[-2]}\n", "")
@@ -230,9 +231,17 @@ def test_instalar_bot_lab_windows_crea_las_cuatro_tareas(mundo, monkeypatch):
     ok = t.instalar(a, log, {"alpaca_key": "PKTESTTEST123", "alpaca_secret": "SECRETSECRET123", "acepta_ficticio": True})
     assert ok, "\n".join(lineas)
     assert set(so.servicios) == {"BotLab pasada", "BotLab vigilante", "BotLab actualizar", "BotLab panel"}
-    assert so.servicios["BotLab pasada"][0].endswith("pasada.bat")
+    # Las tareas ejecutan pythonw.exe windows\tarea.py <que>, NUNCA un .bat: un .bat abre una
+    # consola cada vez que corre la tarea y el vigilante corre cada minuto.
+    for label, que in (("BotLab pasada", "pasada"), ("BotLab vigilante", "vigilante"),
+                       ("BotLab actualizar", "actualizar"), ("BotLab panel", "panel")):
+        prog = [str(x) for x in so.servicios[label]]
+        assert prog[0].endswith(("pythonw.exe", "python.exe", "python")), prog
+        assert prog[1].endswith("tarea.py") and prog[2] == que, prog
+        assert not any(x.lower().endswith(".bat") for x in prog), prog
     assert any("puente_git.py" in c and "--sincronizar" in c for c in so.llamadas)
-    assert any("panel.bat" in " ".join(c) for c in so.llamadas)
+    assert any("tarea.py" in " ".join(c) and "panel" in " ".join(c) for c in so.llamadas)
+    assert not any(".bat" in " ".join(c).lower() for c in so.llamadas), "nada de .bat en Windows"
     e = {x["id"]: x for x in t.estado()}["bot-lab"]
     assert e["instalada"] is True and e["extra"] is True and set(e["servicios"]) == set(so.servicios)
 
