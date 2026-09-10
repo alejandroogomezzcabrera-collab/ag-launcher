@@ -1,5 +1,9 @@
 # Cambios de agcore
 
+## 1.3.19 — 2026-09-10
+
+- el catalogo apunta a Bot Lab 3.24.0
+
 ## 1.3.18 — 2026-09-10
 
 - el catalogo apunta a Bot Lab 3.23.0 (flota de 2048 bots)
