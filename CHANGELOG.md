@@ -1,5 +1,9 @@
 # Cambios de agcore
 
+## 1.3.20 — 2026-09-10
+
+- el catalogo apunta a Bot Lab 3.25.0
+
 ## 1.3.19 — 2026-09-10
 
 - el catalogo apunta a Bot Lab 3.24.0
