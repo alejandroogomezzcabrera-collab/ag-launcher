@@ -1,5 +1,9 @@
 # Cambios de AG Launcher
 
+## 1.3.17 — 2026-09-10
+
+- Catálogo Bot Lab 3.22.7: cotizaciones recientes, autopsias reforzadas y equipos ampliados
+
 ## 1.3.16 — 2026-09-09
 
 - Catálogo Bot Lab 3.22.5: adaptación contextual y aprendizaje correcto de cortos
