@@ -1,5 +1,9 @@
 # Cambios de AG Launcher
 
+## 1.3.18 — 2026-09-10
+
+- el catalogo apunta a Bot Lab 3.23.0 (flota de 2048 bots)
+
 ## 1.3.17 — 2026-09-10
 
 - Catálogo Bot Lab 3.22.7: cotizaciones recientes, autopsias reforzadas y equipos ampliados
